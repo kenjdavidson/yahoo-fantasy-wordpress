@@ -19,6 +19,7 @@
  * @package    yahoo-fantasy
  * @subpackage yahoo-fantasy/admin
  * @author     Bob Webster <bwebster@azionebi.com>
+ * @aurtho     Ken Davidson <ken.j.davidson@live.ca>
  */
 class Yahoo_Fantasy_Admin {
 
@@ -110,15 +111,19 @@ class Yahoo_Fantasy_Admin {
                 'yahoo_fantasy_settings', 
                 array(&$this, 'plugin_settings_page'));
         
-        /*
         add_submenu_page('yahoo_fantasy_settings', 
-                'Yahoo Fantasy Settings', 
-                'Yahoo Fantasy', 
+                'Yahoo OAuth Configuration', 
+                'Yahoo OAuth', 
                 'manage_options', 
-                'yahoo_fantasy_settings', 
+                'yahoo_oauth', 
                 array(&$this, 'plugin_settings_subpage'));
-         * 
-         */
+        
+        add_submenu_page('yahoo_fantasy_settings', 
+                'Customization', 
+                'Customization', 
+                'manage_options', 
+                'yahoo_custom', 
+                array(&$this, 'plugin_custom_subpage'));
     }
 
     /**
@@ -130,19 +135,32 @@ class Yahoo_Fantasy_Admin {
         if (!current_user_can('manage_options')) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'yahoo-fantasy'));
         }
-        include('partials/yahoo-fantasy-admin-display.php');
+        include('partials/yahoo-fantasy-admin-about-display.php');
     }
 
     /**
-     * Validate the logged in user.
+     * Validate the logged in user, then display the OAuth configuration
+     * admin page.
      * 
-     * 1.0.0
+     * @since 1.0.0
      */
     public function plugin_settings_subpage() {
         if (!current_user_can('manage_options')) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'yahoo-fantasy'));
         }
-        // include('partials/yahoo-fantasy-admin-display.php');
+        include('partials/yahoo-fantasy-admin-oauth-display.php');
+    }
+    
+    /**
+     * Validate the logged in user, then display the customization Admin page
+     * 
+     * @since 1.1.0
+     */
+    public function plugin_custom_subpage() {
+         if (!current_user_can('manage_options')) {
+            wp_die(__('You do not have sufficient permissions to access this page.', 'yahoo-fantasy'));
+        }
+        include('partials/yahoo-fantasy-admin-customize-display.php');       
     }
 
     /**

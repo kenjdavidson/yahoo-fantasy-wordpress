@@ -33,6 +33,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-yahoo-fantasy-pu
  * @package    Yahoo_Fantasy
  * @subpackage Yahoo_Fantasy/includes
  * @author     Bob Webster <bwebster@azionebi.com>
+ * @author     Ken Davidson <ken.j.davidson@live.ca>
  */
 class Yahoo_Fantasy {
 

@@ -19,6 +19,7 @@
  * @package    Yahoo_Fantasy
  * @subpackage Yahoo_Fantasy/public
  * @author     Bob Webster <bwebster@azionebi.com>
+ * @author     Ken Davidson <ken.j.davidson@live.ca>
  */
 class Yahoo_Fantasy_Public {
 
@@ -168,19 +169,23 @@ class Yahoo_Fantasy_Public {
         
        switch($options['type']) {
            case "teams":
-               
+           case "Teams":
                break;
-           case "leagues":            
+           case "leagues":
+           case "Leagues":
                require_once( __DIR__ . '/partials/class-yahoo-public-leagues-display.php');
                $displayer = new PublicLeaguesDisplay();
                break;
            case "matchups":
+           case "Matchups":
                break;
            case "standings":
+           case "Standings":
                require_once( __DIR__ . '/partials/class-yahoo-public-standings-display.php' );
                $displayer = new PublicStandingsDisplay();
                break;
            case "games":
+           case "Games":
            default:
                require_once( __DIR__ . '/partials/class-yahoo-public-games-display.php' );
                $displayer = new PublicGamesDisplay();

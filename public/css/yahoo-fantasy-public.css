@@ -91,8 +91,9 @@
     width: 20%;
 }
 
-.yahoo-league table td.team-name {
-    width: 40%;
+.yahoo-league table td.team-name,
+.yahoo-league table td.team-manager {
+    width: 30%;
 }
 
 .yahoo-league table tr.position-1 {

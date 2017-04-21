@@ -60,7 +60,7 @@ class PublicStandingsDisplay implements iYahooPublicDisplayer {
         $gameType = $league->scoring_type;
                     
         $output = "<div class='yahoo-league {$game->name} game-{$game->game_id} league-{$league->league_id}'>\n";
-        $output .= "<span class='league-name'>{$league->name}</span>\n";
+        $output .= "<span class='league-name'>{$league->name} ({$league->season})</span>\n";
         $output .= "<table>\n";
         $output .= "<thead>\n"
                 . "<tr>\n"

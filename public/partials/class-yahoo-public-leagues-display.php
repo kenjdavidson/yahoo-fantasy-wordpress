@@ -6,6 +6,9 @@ require_once __DIR__ . '/interface-yahoo-public-displayer.php';
  * Class used to display Leagues summary information.  This takes the XML response
  * from the /leagues collection and displays an unordered list showing the name
  * of the game, plus the year in which the game belongs.
+ * 
+ * @since      1.1.0
+ * @author     Ken Davidson <ken.j.davidson@live.ca>
  */
 class PublicLeaguesDisplay implements iYahooPublicDisplayer {
     
@@ -20,15 +23,15 @@ class PublicLeaguesDisplay implements iYahooPublicDisplayer {
      */
     public function display($xml) {
         
-        $output .= "<div class='yahoo-fantasy yahoo-game'>\n";
+        $output = "<div class='yahoo-fantasy yahoo-game'>\n";
         
         foreach($xml->users->user[0]->games->game as $game) {
             
             $output .= "<div class='yahoo-game'>\n";
 
             if (!$game->exception) {  
-                $output .= "<span class='game-name'>{$game->name}</span>\n";
-                $output .= $this->outputLeagueTable($league, $game);
+                $output .= "<span class='game-name'>{$game->name} ({$game->season})</span>\n";
+                $output .= $this->outputLeagueTable($game);
             }
             
             $output .= '</div>'; 
@@ -48,7 +51,7 @@ class PublicLeaguesDisplay implements iYahooPublicDisplayer {
      * @param XML $league
      * @return String
      */
-    private function outputLeagueTable($league = null, $game = null) {
+    private function outputLeagueTable($game = null) {
         $output = "<table>\n"
                         . "<thead><tr>\n"
                         . "<td>League Name</td>"
@@ -59,11 +62,14 @@ class PublicLeaguesDisplay implements iYahooPublicDisplayer {
                         . "</tr></thead>\n";
         
         foreach($game->leagues->league as $league) { 
+            
+            $scoring = ($league->scoring_type == "head") ? "Head to Head" : "Rotisserie";
+            
             $output .= "<tr>\n"
                 . "<td class='league-name'>{$league->name}</td>\n"
                 . "<td class='league-start'>{$league->start_date}</td>\n"
                 . "<td class='league-end'>{$league->end_date}</td>\n"
-                . "<td class='league-scoring'>{$league->scoring_type}</td>\n"
+                . "<td class='league-scoring'>{$scoring}</td>\n"
                 . "<td class='league-teams'>{$league->num_teams}</td>\n"
                 . "</tr>\n";
         }   

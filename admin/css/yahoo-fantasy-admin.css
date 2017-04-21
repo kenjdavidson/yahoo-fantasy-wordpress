@@ -1,6 +1,14 @@
+
 /**
- * All of the CSS for your admin-specific functionality should be
- * included in this file.
+ * All of the CSS for the Administration About page.
+ */
+.wrap.about ul {
+    list-style: disc;
+    padding: 5px 20px;
+}
+
+/**
+ * All of the CSS for your Administration option pages.
  */
 
 input[type="text"] {

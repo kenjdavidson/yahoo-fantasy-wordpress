@@ -4,9 +4,6 @@
  * Yahoo_OAuth handles all the creation and connection requests to to the
  * Yahoo! OAuth services.
  *
- * @link       http://example.com
- * @since      1.0.0
- *
  * @since 2.0.0
  * @package    Yahoo_Fantasy
  * @subpackage Yahoo_Fantasy/includes

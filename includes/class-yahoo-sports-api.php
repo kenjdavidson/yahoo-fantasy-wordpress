@@ -3,6 +3,11 @@
 /**
  * The Yahoo_Sports_YQL class is a utlitiy class that provides all the requests
  * available to the plugin.
+ * 
+ * @since       1.1.0
+ * @package     Yahoo_Fantasy
+ * @subpackage  Yahoo_Fantasy/includes
+ * @author      Ken Davidson <ken.j.davidson@live.ca>
  */
 class Yahoo_Sports_API {
     

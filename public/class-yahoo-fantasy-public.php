@@ -170,6 +170,8 @@ class Yahoo_Fantasy_Public {
        switch($options['type']) {
            case "teams":
            case "Teams":
+               require_once( __DIR__ . '/partials/class-yahoo-public-teams-display.php');
+               $displayer = new PublicTeamsDisplay();
                break;
            case "leagues":
            case "Leagues":

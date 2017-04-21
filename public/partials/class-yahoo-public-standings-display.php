@@ -6,6 +6,9 @@ require_once __DIR__ . '/interface-yahoo-public-displayer.php';
  * Class used to display Game summary information.  This takes the XML response
  * from the /games collection and displays an unordered list showing the name
  * of the game, plus the year in which the game belongs.
+ * 
+ * @since       1.1.0
+ * @author      Ken Davidson <ken.j.davidson@live.ca>
  */
 class PublicStandingsDisplay implements iYahooPublicDisplayer {
     

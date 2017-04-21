@@ -17,12 +17,13 @@ The WordPress Plugin Boilerplate includes the following files:
 
 ## Installation
 
-Download the Plugin root directory and copy it to your Wordpress plugin folder.   Once completed go to the
-Plugin panel and activate.
+To install the Yahoo Fantasy Sports plugin:
 
-Once activated, go to the Yahoo Sports administration page and enter your Yahoo Developer keys
-in the appropriate fields.  Once completed, click the Sign In button to sign in and save
-your oAuth token.
+1) Download the plugin zip
+2) Extract / Upload to your Wordpress plugin folder
+3) Complete the Yahoo Developer registration
+4) Complete the Yahoo OAuth Configuration
+5) Edit pages and posts
 
 ## WordPress.org Preparation
 

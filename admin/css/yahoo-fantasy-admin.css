@@ -2,3 +2,12 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+input[type="text"] {
+    width: 100%;
+}
+
+.option-field span {
+    display: block;
+    margin: 5px 0px;
+}

@@ -1,4 +1,108 @@
-/**
- * All of the CSS for your public-facing functionality should be
- * included in this file.
+/*******************************************************************************
+ *
+ * Fantasy Sports Public Styles
+ * 
+ * Contents:
+ * 
+ * 1. Common styles
+ * 2. Game resource styles
+ * 3. League resource styles
+ * 4. Matchup resource styles
+ * 5. Standings resource styles
+ *
+ ******************************************************************************/
+
+/*
+ * 1. Common Styles
  */
+
+.fantasy-sports {
+    display: block;
+    position:relative;
+    width: 100%;
+    clear: both;
+}
+
+.fantasy-sports .title {
+
+}
+
+.fantasy-sports ul li {
+    list-style-type: circle;
+    list-style-position: inside;
+}
+
+.fantasy-sports ul li span {
+    padding: 0px 10px 0px 0px;
+}
+
+.yahoo-fantasy > div {
+    padding-bottom: 10px;
+}
+
+.fantasy-sports table td {
+    padding: 2px 10px;
+}
+
+.fantasy-sports table tr.users-team {
+    background-color: rgba(0,0,0,0.1);
+}
+
+/*
+ * 2. Game Resource styles
+ */
+.yahoo-game .game-name {
+    display: inline-block;
+    width: 100%;
+    color: #000;
+    border-bottom: 2px solid #0078FF;
+    margin-bottom: 10px;
+    padding: 2px 10px;
+    text-transform: uppercase;
+}
+
+.yahoo-game table td {
+    width: 20%;
+}
+
+.yahoo-game table td.league-name {
+    width: 40%;
+}
+
+/*
+ * 3. League Resource styles
+ */
+
+.yahoo-league .game-code {
+    display: none;
+}
+
+.yahoo-league .league-name {
+    display: inline-block;
+    width: 100%;
+    color: #000;
+    border-bottom: 2px solid #0078FF;
+    margin-bottom: 10px;
+    padding: 2px 10px;
+    text-transform: uppercase;
+}
+
+.yahoo-league table td {
+    width: 20%;
+}
+
+.yahoo-league table td.team-name {
+    width: 40%;
+}
+
+.yahoo-league table tr.position-1 {
+    border-left: 5px solid #ffd700;
+}
+
+.yahoo-league table tr.position-2 {
+    border-left: 5px solid #c0c0c0;    
+}
+
+.yahoo-league table tr.position-3 {
+    border-left: 5px solid #b37700;
+}

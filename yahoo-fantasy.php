@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Yahoo Fantasy Stats
  * Plugin URI:        http://azionebi.com/yahoo-fantasy/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Display Yahoo Sports Fantasy information within your Wordpress site.
  * Version:           1.0.0
  * Author:            Azione Business Intelligence adapted from the WordPress Boilerplate Plugin
  * Author URI:        http://azionebi.com/
@@ -28,6 +28,17 @@
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
+}
+
+/**
+ * Function provides error log output when the WP_DEBUG variable is set to
+ * true.
+ * @param String $msg
+ */
+function yahooSportsLogger($msg) {
+    if (WP_DEBUG) {
+        error_log('Yahoo_Fantasy plugin: ' . $msg);
+    }
 }
 
 /**
@@ -57,19 +68,8 @@ register_deactivation_hook( __FILE__, 'deactivate_Yahoo_Fantasy' );
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-yahoo-fantasy.php';
 
-/**
- * Begins execution of the plugin.
- *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since    1.0.0
- */
-function run_Yahoo_Fantasy() {
-
-	$plugin = new Yahoo_Fantasy();
-	$plugin->run();
-
-}
-run_Yahoo_Fantasy();
+// Begin execution of the plugin by creating a Global variable and calling
+// it's run() method.  The Yahoo_Fantasy class is responsible for determining
+// whether the public or admin functionality should be available.
+yahooSportsLogger('Creating Yahoo_Fantasy Object');
+$yfPlugin = new Yahoo_Fantasy;

@@ -238,7 +238,17 @@ class Yahoo_Fantasy_Public {
                 update_option('yf_access_session', $this->oauth->getAccessSession()); 
                 
                 // Retry the request
-                $thisOk = $this->oauth->request($url);
+                //$thisOk = $this->oauth->request($url);
+                
+                unset($this->oauth);
+                $this->oauth = new Yahoo_OAuth(get_option('yf_consumer_key'), 
+                    get_option('yf_consumer_secret'), 
+                    get_option('yf_access_secret'), 
+                    get_option('yf_access_token'), 
+                    get_option('yf_access_session'), 
+                    get_option('yf_request_secret'));
+                
+                $resOk = $this->oauth->request($url);
             }                     
         } 
         

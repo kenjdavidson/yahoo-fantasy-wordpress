@@ -32,6 +32,14 @@
 $consumer_key = trim(get_option('yf_consumer_key'));
 $consumer_secret = trim(get_option('yf_consumer_secret'));
 
+if (!$consumer_key) {
+    $consumer_key = "Enter Consumer Key";
+}
+
+if (!$consumer_secret) {
+    $consumer_secret = "Enter Consumer Secret";
+}
+
 // Access Key, Secret and Session if available
 $access_token = trim(get_option('yf_access_token'));
 $access_secret = trim(get_option('yf_access_secret'));
@@ -50,7 +58,7 @@ $o = new Yahoo_OAuth($consumer_key,
         $access_token, 
         $access_session,
         $request_verifier);
-$o->setDebug(true);
+$o->setDebug(true);    
 
 // Initialize as false
 $auth_success = false;
@@ -163,10 +171,14 @@ $auth_success = false;
                  * to the Verification page and allow them to enter the verification value
                  * when they receive it.
                  */
-
-                $requestUrl = $o->getVerifierUrl();
-                $request_token = $o->getRequestToken();
-                $request_secret = $o->getRequestSecret();   
+                
+                try {
+                    $requestUrl = $o->getVerifierUrl();
+                    $request_token = $o->getRequestToken();
+                    $request_secret = $o->getRequestSecret();                    
+                } catch (OAuthException $ex) {
+                    // Ignore as we'll display empty values
+                }   
                 
                 ?>
                 <p>

@@ -358,9 +358,7 @@ class Yahoo_OAuth {
      * @param String $secret
      * @param String $session
      */
-    public function setAccessTokens(String $token,
-            String $secret,
-            String $session) {
+    public function setAccessTokens($token, $secret, $session) {
         $this->accessToken = $token;
         $this->accessSecret = $secret;
         $this->accessSession = $session;
@@ -376,9 +374,7 @@ class Yahoo_OAuth {
      * @param String $secret
      * @param String $verifier
      */
-    public function setRequestTokens(String $token, 
-            String $secret, 
-            String $verifier = null) {
+    public function setRequestTokens($token, $secret, $verifier = null) {
         $this->requestToken = $token;
         $this->requestSecret = $secret;
         $this->requestVerifier = $verifier;     

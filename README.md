@@ -27,7 +27,8 @@ To install the Yahoo Fantasy Sports plugin:
 
 ## WordPress.org Preparation
 
-N/A
+1) Requires PHP 5.4 or greater. 
+2) Tested with a number of Wordpress versions, although no guarantee on super old version.
 
 ## Recommended Tools
 

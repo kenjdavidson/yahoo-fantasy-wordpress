@@ -17,7 +17,7 @@ class PublicGamesDisplay implements iYahooPublicDisplayer {
      * @param SimpleXMLElemnt $xml
      * @return String
      */
-    public function display($xml) {
+    public function getDisplayContent($xml) {
         $output = '<ul>'; 
        
         foreach($xml->users->user[0]->games->game as $game) {
@@ -29,6 +29,16 @@ class PublicGamesDisplay implements iYahooPublicDisplayer {
 
         $output .= '</ul>';        
         return $output;         
+    }
+
+    /**
+     * Provides the Yahoo Sports Games endpoint
+     */
+    public function getRequestEndpoint($options) {
+        
+        
+        return iYahooPublicDisplayer::API_BASE 
+                . '/users;use_login=1/games;seasons=%s';
     }
 
 }

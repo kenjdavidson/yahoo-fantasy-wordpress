@@ -197,7 +197,7 @@ class Yahoo_Fantasy_Public {
         // Convert the 
         try {
             $fantasy = new SimpleXMLElement($this->oauth->getLastResponse());
-            $result .= $displayer->display($fantasy);            
+            $result .= $displayer->getDisplayContent($fantasy);            
         } catch (Exception $ex) {
             $result .= '<span class="error">Could not parse Yahoo! Services response</span>';
         }

@@ -21,7 +21,7 @@ class PublicLeaguesDisplay implements iYahooPublicDisplayer {
      * @param SimpleXMLElemnt $xml
      * @return String
      */
-    public function display($xml) {
+    public function getDisplayContent($xml) {
         
         $output = "<div class='yahoo-fantasy yahoo-game'>\n";
         

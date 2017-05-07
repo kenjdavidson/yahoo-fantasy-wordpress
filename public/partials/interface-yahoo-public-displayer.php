@@ -9,6 +9,12 @@
 interface iYahooPublicDisplayer {
     
     /**
+     * Yahoo! Sports Query Language URL.  To use this, the select string is
+     * appended.  
+     */
+    const API_BASE = 'http://fantasysports.yahooapis.com/fantasy/v2';
+    
+    /**
      * Display function is used to convert Yahoo Sports XML response into
      * appropriate XML.  XML should follow the standard rules where:
      * 
@@ -19,7 +25,10 @@ interface iYahooPublicDisplayer {
      * @param SimpleXMLElement $xml
      * @return String HTML content to display
      */
-    public function display($xml);
+    public function getDisplayContent($xml);
     
-    
+    /**
+     * Returns the requested endpoint specified by this displayer Class.  
+     */
+    public function getRequestEndpoint();
 }

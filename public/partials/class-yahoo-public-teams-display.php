@@ -18,7 +18,7 @@ class PublicTeamsDisplay implements iYahooPublicDisplayer {
      * 
      * @param SimpleXMLElement $xml
      */
-    public function display($xml) {
+    public function getDisplayContent($xml) {
         
         // Handle all the leagues for which the user is apart of.  For
         // whatever reason the xml returned for the games/leagues;standings

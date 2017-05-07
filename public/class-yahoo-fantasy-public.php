@@ -164,7 +164,7 @@ class Yahoo_Fantasy_Public {
         // provided.  If there is an error making or getting the request, the
         // information is returned.
         if (!$this->doOAuthRequest($options['type'], $options['seasons'])) {
-            return $this->wrapHtml("Unable to retrieve {$options['type']} data.");
+            return $this->htmlError("Unable to retrieve {$options['type']} data.");
         }
         
        switch($options['type']) {
@@ -260,10 +260,10 @@ class Yahoo_Fantasy_Public {
      * error messages and other single serving messages.
      * @param type $msg
      */
-    private function wrapHtml($msg, $class = 'error') {
-        return  '<div class="yahoo-fantasy user-games">'
-            . '  <span class="' . $class . '">' . $msg . '</span>'
-            . '<div>';
+    private function htmlError($msg, $class = 'error') {
+        return  '<span class="' . $class . '">' 
+                . $msg 
+                . '</span>';
     }    
    
 }

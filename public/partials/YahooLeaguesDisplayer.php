@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/interface-yahoo-public-displayer.php';
+require_once __DIR__ . '/IYahooPublicDisplayer.php';
 
 /**
  * Class used to display Leagues summary information.  This takes the XML response
@@ -10,7 +10,7 @@ require_once __DIR__ . '/interface-yahoo-public-displayer.php';
  * @since      1.1.0
  * @author     Ken Davidson <ken.j.davidson@live.ca>
  */
-class PublicLeaguesDisplay implements iYahooPublicDisplayer {
+class PublicLeaguesDisplayer implements iYahooPublicDisplayer {
     
     /**
      * Convert the Yahoo XML response into an unordered list of Games.  This 
@@ -77,5 +77,27 @@ class PublicLeaguesDisplay implements iYahooPublicDisplayer {
         $output .= "</table>\n";               
                 
         return $output;
-    }                    
+    }
+
+    /**
+     * Provides the Yahoo Sports Leagues endpoint.  The PublicLeagueDisplay
+     * class accepts and uses the following options:
+     * 
+     * $options = [
+     *  'seasons' => String of season/year values
+     * ]
+     * 
+     * @param type $options
+     */
+    public function getRequestEndpoint($options) {
+        
+        $seasons = array_key_exists('seasons', $options)
+                ? $options['seasons']
+                : getDate()['year'];
+        
+        return Yahoo_Sports_API::API_BASE
+                . '/users;use_login=1/games;seasons=' . $seasons 
+                . '/leagues';        
+    }
+
 }

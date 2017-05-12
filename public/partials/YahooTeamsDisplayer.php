@@ -11,7 +11,7 @@ require_once __DIR__ . '/interface-yahoo-public-displayer.php';
  * @author      Ken Davidson <ken.j.davidson@live.ca>
  */
 
-class PublicTeamsDisplay implements iYahooPublicDisplayer {
+class YahooTeamsDisplayer implements iYahooPublicDisplayer {
     
     /**
      * Converts the XML element provided by Yahoo services into HTML.
@@ -82,4 +82,26 @@ class PublicTeamsDisplay implements iYahooPublicDisplayer {
         else
             return $number. $ends[$number % 10];
     }
+
+    /**
+     * Provides the Yahoo Sports Standings endpoint.  The PublicStandingDisplay
+     * class accepts and uses the following options:
+     * 
+     * $options = [
+     *  'seasons' => String of season/year values
+     * ]
+     * 
+     * @param type $options
+     */
+    public function getRequestEndpoint($options) {
+        
+        $seasons = array_key_exists('seasons', $options)
+                ? $options['seasons']
+                : getDate()['year'];
+        
+        return Yahoo_Sports_API::API_BASE 
+                . '/users;use_login=1/games;seasons=' . $seasons
+                . '/teams;out=standings';        
+    }
+
 }

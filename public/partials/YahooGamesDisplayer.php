@@ -1,13 +1,13 @@
 <?php
 
-require_once __DIR__ . '/interface-yahoo-public-displayer.php';
+require_once __DIR__ . '/IYahooPublicDisplayer.php';
 
 /**
  * Class used to display Game summary information.  This takes the XML response
  * from the /games collection and displays an unordered list showing the name
  * of the game, plus the year in which the game belongs.
  */
-class PublicGamesDisplay implements iYahooPublicDisplayer {
+class YahooGamesDisplayer extends Yahoo_Sports_API implements iYahooPublicDisplayer {
     
     /**
      * Convert the Yahoo XML response into an unordered list of Games.  This 
@@ -32,13 +32,24 @@ class PublicGamesDisplay implements iYahooPublicDisplayer {
     }
 
     /**
-     * Provides the Yahoo Sports Games endpoint
+     * Provides the Yahoo Sports Games endpoint.  The PublicGamesDisplay
+     * class accepts and uses the following options:
+     * 
+     * $options = [
+     *  'seasons' => String of season/year values
+     * ]
+     * 
+     * @param Array $options
      */
     public function getRequestEndpoint($options) {
         
+        $seasons = array_key_exists('seasons', $options)
+                ? $options['seasons']
+                : getDate()['year'];
         
-        return iYahooPublicDisplayer::API_BASE 
-                . '/users;use_login=1/games;seasons=%s';
+        return Yahoo_Sports_API::API_BASE 
+                . '/users;use_login=1/games;seasons='
+                . $seasons;
     }
 
 }

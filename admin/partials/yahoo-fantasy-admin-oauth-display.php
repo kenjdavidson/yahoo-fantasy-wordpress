@@ -76,7 +76,7 @@ $auth_success = false;
             // Get the Users game list request URL, used for testing the
             // connection to Yahoo! services.  Just because it's the fastest
             // request
-            $url = Yahoo_Sports_API::endpointBySeason('user');
+            $url = Yahoo_Sports_API::USER_API_URL;
             
             // If we have an access token and a request verifier available, 
             // we should be able to make the request successfully.  If so

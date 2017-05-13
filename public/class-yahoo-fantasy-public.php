@@ -169,12 +169,12 @@ class Yahoo_Fantasy_Public {
             case "teams":
             case "Teams":
                 require_once( __DIR__ . '/partials/YahooTeamsDisplayer.php');
-                $displayer = new PublicTeamsDisplayer();
+                $displayer = new YahooTeamsDisplayer();
                 break;
             case "leagues":
             case "Leagues":
                 require_once( __DIR__ . '/partials/YahooLeaguesDisplayer.php');
-                $displayer = new PublicLeaguesDisplayer();
+                $displayer = new YahooLeaguesDisplayer();
                 break;
             case "matchups":
             case "Matchups":
@@ -182,13 +182,13 @@ class Yahoo_Fantasy_Public {
             case "standings":
             case "Standings":
                 require_once( __DIR__ . '/partials/YahooStandingsDisplayer.php' );
-                $displayer = new PublicStandingsDisplayer();
+                $displayer = new YahooStandingsDisplayer();
                 break;
             case "games":
             case "Games":
             default:
                 require_once( __DIR__ . '/partials/YahooGamesDisplayer.php' );
-                $displayer = new PublicGamesDisplayer();
+                $displayer = new YahooGamesDisplayer();
                 break;
         } 
         

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/interface-yahoo-public-displayer.php';
+require_once __DIR__ . '/IYahooPublicDisplayer.php';
 
 /**
  * Formats and displays the XML provided by the Yahoo Fantasy Sports Teams

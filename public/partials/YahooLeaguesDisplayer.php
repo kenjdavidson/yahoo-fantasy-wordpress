@@ -10,7 +10,7 @@ require_once __DIR__ . '/IYahooPublicDisplayer.php';
  * @since      1.1.0
  * @author     Ken Davidson <ken.j.davidson@live.ca>
  */
-class PublicLeaguesDisplayer implements iYahooPublicDisplayer {
+class YahooLeaguesDisplayer implements iYahooPublicDisplayer {
     
     /**
      * Convert the Yahoo XML response into an unordered list of Games.  This 

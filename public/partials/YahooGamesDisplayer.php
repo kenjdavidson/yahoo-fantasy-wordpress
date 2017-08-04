@@ -14,10 +14,13 @@ class YahooGamesDisplayer extends Yahoo_Sports_API implements iYahooPublicDispla
      * XML should contain a <users> entry as the main level; and should be 
      * followed down to the <game> elements.
      * 
+     * The output HTML is run through the 'yfs_games_output' filter, providing 
+     * the output HTML and the original XML as parameters.
+     * 
      * @param SimpleXMLElemnt $xml
      * @return String
      */
-    public function getDisplayContent($xml) {
+    public function getDisplayContent($xml, $options) {
         $output = '<ul>'; 
        
         foreach($xml->users->user[0]->games->game as $game) {
@@ -28,7 +31,7 @@ class YahooGamesDisplayer extends Yahoo_Sports_API implements iYahooPublicDispla
         }            
 
         $output .= '</ul>';        
-        return $output;         
+        return apply_filters( 'yfs_games_output', $output, $xml, $options);         
     }
 
     /**
@@ -39,6 +42,8 @@ class YahooGamesDisplayer extends Yahoo_Sports_API implements iYahooPublicDispla
      *  'seasons' => String of season/year values
      * ]
      * 
+     * The games API url is run through the 'yfs_games_api' filter.
+     * 
      * @param Array $options
      */
     public function getRequestEndpoint($options) {
@@ -47,9 +52,11 @@ class YahooGamesDisplayer extends Yahoo_Sports_API implements iYahooPublicDispla
                 ? $options['seasons']
                 : getDate()['year'];
         
-        return Yahoo_Sports_API::API_BASE 
+        $url = Yahoo_Sports_API::API_BASE 
                 . '/users;use_login=1/games;seasons='
                 . $seasons;
+        
+        return apply_filters( 'yfs_games_api', $url, $options );
     }
 
 }

@@ -18,7 +18,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-yahoo-sports-a
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-yahoo-fantasy-i18n.php';
 
 require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-yahoo-fantasy-admin.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-yahoo-fantasy-public.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'public/YahooFantasyPublic.php';
 
 /**
  * The core plugin class.
@@ -57,7 +57,7 @@ class Yahoo_Fantasy {
     
     /**
      * Yahoo Fantasy Public object used throughout the Wordpress cycle
-     * @var Yahoo_Fantasy_Public $yahooPublic
+     * @var YahooFantasyPublic $yahooPublic
      */
     protected $yahooPublic;
     
@@ -102,8 +102,8 @@ class Yahoo_Fantasy {
             $this->yahooAdmin = new Yahoo_Fantasy_Admin(
                     $this->plugin_name, $this->version);           
         } else {
-            yahooSportsLogger('Creating Yahoo_Fantasy_Public Object.');
-            $this->yahooPublic = new Yahoo_Fantasy_Public(
+            yahooSportsLogger('Creating YahooFantasyPublic Object.');
+            $this->yahooPublic = new YahooFantasyPublic(
                     $this->plugin_name, $this->version);
         }        
     }

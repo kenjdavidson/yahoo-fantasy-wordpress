@@ -17,9 +17,10 @@ interface iYahooPublicDisplayer {
      * 3) <img> should include the attribute data-loadimg="" to lazy load
      * 
      * @param SimpleXMLElement $xml
+     * @param Mixed $options
      * @return String HTML content to display
      */
-    public function getDisplayContent($xml);
+    public function getDisplayContent($xml, $options);
     
     /**
      * Returns the requested endpoint specified by this displayer Class.  The

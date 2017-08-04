@@ -17,10 +17,14 @@ class YahooStandingsDisplayer implements iYahooPublicDisplayer {
      * XML should contain a <users> entry as the main level; and should be 
      * followed down to the <game> elements.
      * 
+     * The output is run through the filter 'yfs_standings_output' using the
+     * $output and $xml as arguments.
+     * 
      * @param SimpleXMLElemnt $xml
+     * @param Mixed $options
      * @return String
      */
-    public function getDisplayContent($xml) {
+    public function getDisplayContent($xml, $options) {
         
         // Handle all the leagues for which the user is apart of.  For
         // whatever reason the xml returned for the games/leagues;standings
@@ -36,7 +40,7 @@ class YahooStandingsDisplayer implements iYahooPublicDisplayer {
                 
                 foreach($game->leagues->league as $league) {
                     
-                    $output .= $this->outputLeagueTable($league, $game);
+                    $output .= $this->outputLeagueTable($league, $game, $options);
 
                 } // End league                                                
             } // End exception
@@ -45,7 +49,7 @@ class YahooStandingsDisplayer implements iYahooPublicDisplayer {
         $output .= "</div>\n";
         
         //return $this->oauth->getLastResponse(); 
-        return $output;         
+        return apply_filters( 'yfs_standings_output', $output, $xml, $options );         
     }
 
    /**
@@ -57,26 +61,26 @@ class YahooStandingsDisplayer implements iYahooPublicDisplayer {
      * @param XML $league
      * @return String
      */
-    private function outputLeagueTable($league = null, $game = null) {
+    private function outputLeagueTable($league = null, $game = null, $options) {
         if ($league == null) return "";
         
         $gameType = $league->scoring_type;
                     
         $output = "<div class='yahoo-league {$game->name} game-{$game->game_id} league-{$league->league_id}'>\n";
-        $output .= "<span class='league-name'>{$league->name} ({$league->season})</span>\n";
+        $output .= "<span class='league-name title'>{$league->name} ({$league->season})</span>\n";
         $output .= "<table>\n";
         $output .= "<thead>\n"
                 . "<tr>\n"
-                . "<td class='team-name'>Team Name</td>"
-                . "<td class='team-manager'>Manager</td>"
-                . "<td class='team-postiion'>Position</td>";
+                . "<th class='team-name'>Team Name</td>"
+                . "<th class='team-manager'>Manager</td>"
+                . "<th class='team-postiion'>Position</td>";
 
         // Base the next few columns on the specific game type and available 
         // information.
         if ($gameType == "head") {
-            $output .= "<td class='team-record'>Record</td>";                      
+            $output .= "<th class='team-record'>Record</td>";                      
         } else {
-            $output .= "<td class='team-points-for'>Points</td>";
+            $output .= "<th class='team-points-for'>Points</td>";
         }
 
         $output .= "</tr>\n"
@@ -120,6 +124,9 @@ class YahooStandingsDisplayer implements iYahooPublicDisplayer {
      *  'seasons' => String of season/year values
      * ]
      * 
+     * API Url is pushed through filter 'yfs_standings_api' for customization.
+     * the $output and $options are provided as arguments.
+     * 
      * @param type $options
      */
     public function getRequestEndpoint($options) {
@@ -128,9 +135,11 @@ class YahooStandingsDisplayer implements iYahooPublicDisplayer {
                 ? $options['seasons']
                 : getDate()['year'];
         
-        return Yahoo_Sports_API::API_BASE 
+        $url = Yahoo_Sports_API::API_BASE 
                 . '/users;use_login=1/games;seasons=' . $seasons 
                 . '/leagues;out=standings';        
+        
+        return apply_filters( 'yfs_standings_api', $url, $options );
     }
 
 }

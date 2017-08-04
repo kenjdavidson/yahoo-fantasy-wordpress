@@ -18,10 +18,14 @@ class YahooLeaguesDisplayer implements iYahooPublicDisplayer {
      * followed down to the <league> elements.  Games which have an
      * <exception> are skipped, as these do not have leagues.
      * 
+     * The html string is passed through the filter 'yfs_leagues_output' with
+     * a provided XML object that can be used to customize the HTML output
+     * to display on the page.
+     * 
      * @param SimpleXMLElemnt $xml
      * @return String
      */
-    public function getDisplayContent($xml) {
+    public function getDisplayContent($xml, $options) {
         
         $output = "<div class='yahoo-fantasy yahoo-game'>\n";
         
@@ -31,7 +35,7 @@ class YahooLeaguesDisplayer implements iYahooPublicDisplayer {
 
             if (!$game->exception) {  
                 $output .= "<span class='game-name'>{$game->name} ({$game->season})</span>\n";
-                $output .= $this->outputLeagueTable($game);
+                $output .= $this->outputLeagueTable($game, $otions);
             }
             
             $output .= '</div>'; 
@@ -39,7 +43,7 @@ class YahooLeaguesDisplayer implements iYahooPublicDisplayer {
         
         $output .= "</div>\n";
         
-        return $output;       
+        return apply_filters( 'yfs_leagues_output', $output, $xml, $options );      
     }
                     
    /**
@@ -51,32 +55,50 @@ class YahooLeaguesDisplayer implements iYahooPublicDisplayer {
      * @param XML $league
      * @return String
      */
-    private function outputLeagueTable($game = null) {
+    private function outputLeagueTable($game = null, $options) {
         $output = "<table>\n"
                         . "<thead><tr>\n"
                         . "<td>League Name</td>"
-                        . "<td>Start Date</td>"
-                        . "<td>End Date</td>"
-                        . "<td>Scoring Type</td>"
+                        . "<td>Scoring</td>"                
+                        . "<td>Week</td>"
                         . "<td>Teams</td>"
+                        . "<td>Positions</td>"
                         . "</tr></thead>\n";
         
         foreach($game->leagues->league as $league) { 
             
             $scoring = ($league->scoring_type == "head") ? "Head to Head" : "Rotisserie";
+            $settings = $league->settings;
+            $positions = $this->getRosterPositions($settings, $options);
             
             $output .= "<tr>\n"
                 . "<td class='league-name'>{$league->name}</td>\n"
-                . "<td class='league-start'>{$league->start_date}</td>\n"
-                . "<td class='league-end'>{$league->end_date}</td>\n"
                 . "<td class='league-scoring'>{$scoring}</td>\n"
+                . "<td class='league-week'>{$league->current_week}</td>\n"
                 . "<td class='league-teams'>{$league->num_teams}</td>\n"
+                . "<td class='league-positions'>{$positions}</td>\n"
                 . "</tr>\n";
         }   
         
         $output .= "</table>\n";               
                 
         return $output;
+    }
+    
+    /**
+     * Parse the league settings to get a comma separated list of the 
+     * positions in the league.
+     * @param XML $settings
+     * @return String
+     */
+    private function getRosterPositions($settings, $options) {
+        $positions = '';
+        
+        foreach($settings->roster_positions->roster_position as $pos) {
+            $positions .= ', ' . $pos->position . '(' . $pos->count .  ')';
+        }
+        
+        return substr($positions, 2);
     }
 
     /**
@@ -87,6 +109,9 @@ class YahooLeaguesDisplayer implements iYahooPublicDisplayer {
      *  'seasons' => String of season/year values
      * ]
      * 
+     * The url and options are passed through the filter 'yfs_leagues_api' so 
+     * that plugin/theme developers can request a new API url.
+     * 
      * @param type $options
      */
     public function getRequestEndpoint($options) {
@@ -95,9 +120,11 @@ class YahooLeaguesDisplayer implements iYahooPublicDisplayer {
                 ? $options['seasons']
                 : getDate()['year'];
         
-        return Yahoo_Sports_API::API_BASE
+        $url = Yahoo_Sports_API::API_BASE
                 . '/users;use_login=1/games;seasons=' . $seasons 
-                . '/leagues';        
+                . '/leagues;out=settings';   
+        
+        return apply_filters( 'yfs_leagues_api', $url, $options);
     }
 
 }

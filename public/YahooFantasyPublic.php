@@ -21,12 +21,12 @@
  * @author     Bob Webster <bwebster@azionebi.com>
  * @author     Ken Davidson <ken.j.davidson@live.ca>
  * 
- * @uses apply_filters('yahoo_sports_filter_request_error_text', String)
- * @uses apply_filters('yahoo_sports_filter_request_error_class', String)
- * @uses apply_filters('yahoo_sports_filter_parse_error_text', String)
- * @uses apply_filters('yahoo_sports_filter_parse_error_class', String)
+ * @uses apply_filters('yfs_request_error_text', String)
+ * @uses apply_filters('yfs_request_error_class', String)
+ * @uses apply_filters('yfs_parse_error_text', String)
+ * @uses apply_filters('yfs_parse_error_class', String)
  */
-class Yahoo_Fantasy_Public {
+class YahooFantasyPublic {
 
     /**
      * The ID of this plugin.
@@ -79,11 +79,17 @@ class Yahoo_Fantasy_Public {
     }
 
     /**
-     * Register the style sheets for the public-facing side of the site.
+     * Register the style sheets for the public-facing side of the site.  The 
+     * public plugin uses the skeleton css framework for display purposes.
      *
      * @since    1.0.0
      */
     public function enqueue_styles() {
+        wp_enqueue_style('flexboxgrid',
+                plugin_dir_url(__FILE__) . 'css/flexboxgrid.min.css', 
+                array(), 
+                '6.3.1', 
+                'all');
         wp_enqueue_style($this->plugin_name, 
                 plugin_dir_url(__FILE__) . 'css/yahoo-fantasy-public.css', 
                 array(), 
@@ -198,24 +204,25 @@ class Yahoo_Fantasy_Public {
         // Attempt the request based on the type requested and the season(s)
         // provided.  If there is an error making or getting the request, the
         // information is returned.  The error text is run through the
-        // filter 'yahoo_sports_filter_request_error_text' to be replaced or appended
+        // filter 'ysf_request_error_text' to be replaced or appended
         if (!$this->doOAuthRequest($url)) {
-            $errorText = apply_filters('yahoo_sports_filter_request_error_text',
+            $errorText = apply_filters('ysf_request_error_text',
                     "Unable to retrieve {$options['type']} data, please try a control-refresh.");
-            $errorClass = apply_filters('yahoo_sports_filter_request_error_class',
+            $errorClass = apply_filters('ysf_request_error_class',
                     'error');
             return $this->htmlError($errorText, $errorClass);
         }
-               
-        
-        // Convert the 
+                       
+        // Convert the response to a SimpleXMLElement and pass it into the
+        // displayer interface.
         try {
+            yahooSportsLogger($this->oauth->getLastResponse());
             $fantasy = new SimpleXMLElement($this->oauth->getLastResponse());
-            $result .= $displayer->getDisplayContent($fantasy);            
+            $result .= $displayer->getDisplayContent($fantasy, $options);            
         } catch (Exception $ex) {
-            $parseErrorText = apply_filters('yahoo_sports_filter_parse_error_text', 
+            $parseErrorText = apply_filters('ysf_parse_error_text', 
                     'Could not parse Yahoo! Services response.');
-            $parseErrorClass = apply_filters('yahoo_sports_filter_parse_error_class',
+            $parseErrorClass = apply_filters('ysf_parse_error_class',
                     'error');                  
             $result .= $this->htmlError($parseErrorText, $parseErrorClass);
         }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The Yahoo_Sports_YQL class is a utlitiy class that provides all the requests
+ * The Yahoo_Sports_YQL class is a utility class that provides all the requests
  * available to the plugin.
  * 
  * @since       1.1.0
@@ -9,7 +9,7 @@
  * @subpackage  Yahoo_Fantasy/includes
  * @author      Ken Davidson <ken.j.davidson@live.ca>
  */
-class Yahoo_Sports_API {
+class YahooSportsAPI {
     
     /**
      * Yahoo! Sports API Base Url.  To use this, the select string is

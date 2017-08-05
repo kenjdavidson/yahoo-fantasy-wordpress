@@ -114,7 +114,6 @@ class YahooFantasyPublic {
      * Perform any final initialization.  This takes care of adding all the 
      * other Actions, Filters and Events that are needed to perform the public
      * display of the YahooFantasy plugin.
-     * 
      */
     protected function init() {        
         // Styles and Scripts cannot be enqueued prior to the wp_enqueue_scripts
@@ -126,7 +125,7 @@ class YahooFantasyPublic {
         
         // [yahoofantasysports] shortcode.
         yahooSportsLogger('Adding [yahoofantasysports] shortcode.');
-        add_shortcode('yahoofantasysports', array(&$this, 'yahoo_fantasy_shortcode'));
+        add_shortcode('yahoofantasysports', array(&$this, 'handleShortcode'));
     }
 
     /**
@@ -134,21 +133,14 @@ class YahooFantasyPublic {
      * code attributes determine what information is displayed.   The bare bones
      * shortcode displays the users game summary, a small list of sports in which
      * the user had played in for a particular season.  Some other display types
-     * are:
-     * 
-     * - games: display a list of games (default)
-     * - leagues: display a list of leagues
-     * - matchups: display a list of matchups for the current week
-     * - standings: displays all the league standings (overall)
-     * 
-     * TODO: Should eventually set this up to call custom hooks.
+     * are:   
      * 
      * @param Array $atts
      * @param String $content
      * @param String $tag
      * @return String
      */    
-    public function yahoo_fantasy_shortcode($atts = [], $content = null, $tag = '') {
+    public function handleShortcode($atts = [], $content = null, $tag = '') {
         
         /* @var $the_user WP_User */
        $attr_lower = array_change_key_case((array)$atts, CASE_LOWER);
@@ -184,6 +176,8 @@ class YahooFantasyPublic {
                 break;
             case "matchups":
             case "Matchups":
+                require_once(__DIR__ . '/partials/YahooMatchupDisplayer.php');
+                $displayer = new YahooMatchupDisplayer();
                 break;
             case "standings":
             case "Standings":
@@ -196,7 +190,7 @@ class YahooFantasyPublic {
                 require_once( __DIR__ . '/partials/YahooGamesDisplayer.php' );
                 $displayer = new YahooGamesDisplayer();
                 break;
-        } 
+        }              
         
         // Get the URL from the IYahooPublicDisplayer class returned
         $url = $displayer->getRequestEndpoint($options);
@@ -207,9 +201,10 @@ class YahooFantasyPublic {
         // filter 'ysf_request_error_text' to be replaced or appended
         if (!$this->doOAuthRequest($url)) {
             $errorText = apply_filters('ysf_request_error_text',
-                    "Unable to retrieve {$options['type']} data, please try a control-refresh.");
-            $errorClass = apply_filters('ysf_request_error_class',
-                    'error');
+                    "Unable to retrieve {$options['type']} data.  "
+                    . "Please try a control-refresh or check your administration "
+                    . "settings.");
+            $errorClass = apply_filters('ysf_request_error_class', 'error');
             return $this->htmlError($errorText, $errorClass);
         }
                        
@@ -220,10 +215,10 @@ class YahooFantasyPublic {
             $fantasy = new SimpleXMLElement($this->oauth->getLastResponse());
             $result .= $displayer->getDisplayContent($fantasy, $options);            
         } catch (Exception $ex) {
+            yahooSportsLogger($ex->getMessage());
             $parseErrorText = apply_filters('ysf_parse_error_text', 
                     'Could not parse Yahoo! Services response.');
-            $parseErrorClass = apply_filters('ysf_parse_error_class',
-                    'error');                  
+            $parseErrorClass = apply_filters('ysf_parse_error_class','error');                  
             $result .= $this->htmlError($parseErrorText, $parseErrorClass);
         }
 
@@ -237,8 +232,7 @@ class YahooFantasyPublic {
      * and the season that is supplied.  The current year is always defaulted
      * to the season.
      * 
-     * @param type $endpoint
-     * @param type $season
+     * @param String $url
      */
     protected function doOAuthRequest($url) {
        
@@ -273,10 +267,11 @@ class YahooFantasyPublic {
     }
     
     /**
-     * Wrap the provided message in standard HTML.  This should be used for 
-     * error messages and other single serving messages.
+     * Helper method used to convert error messages into specific HTML
+     * <span class="$class"> element.
      * 
-     * @param type $msg
+     * @param String $msg
+     * @param String $class 
      */
     private function htmlError($msg, $class = 'error') {
         return  '<span class="' . $class . '">' 

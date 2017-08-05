@@ -6,8 +6,19 @@ require_once __DIR__ . '/IYahooPublicDisplayer.php';
  * Class used to display Game summary information.  This takes the XML response
  * from the /games collection and displays an unordered list showing the name
  * of the game, plus the year in which the game belongs.
+ * 
+ * @since 1.1.0
+ * @author Ken davidson
+ * 
+ * @see YahooSportsAPI
+ * @see iYahooPublicDisplayer
+ * 
+ * @uses apply_filters Filter 'yfs_games_api' allows plugin and theme developers
+ *                     to customize the Games API url.
+ * @uses apply_filters Filter 'yfs_games_output' allows plugin and theme
+ *                     developers to customize the Games HTML output string.
  */
-class YahooGamesDisplayer extends Yahoo_Sports_API implements iYahooPublicDisplayer {
+class YahooGamesDisplayer implements iYahooPublicDisplayer {
     
     /**
      * Convert the Yahoo XML response into an unordered list of Games.  This 
@@ -52,7 +63,7 @@ class YahooGamesDisplayer extends Yahoo_Sports_API implements iYahooPublicDispla
                 ? $options['seasons']
                 : getDate()['year'];
         
-        $url = Yahoo_Sports_API::API_BASE 
+        $url = YahooSportsAPI::API_BASE 
                 . '/users;use_login=1/games;seasons='
                 . $seasons;
         

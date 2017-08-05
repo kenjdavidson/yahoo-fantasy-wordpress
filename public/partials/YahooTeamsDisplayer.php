@@ -4,11 +4,19 @@ require_once __DIR__ . '/IYahooPublicDisplayer.php';
 
 /**
  * Formats and displays the XML provided by the Yahoo Fantasy Sports Teams
- * request.  The Teams request shows each team as a badge, displaying the
- * team logo, manager name/info, team info, standings and scoring info, etc.
+ * request.  The default teams output displays:
+ * 
+ * - Team icon
+ * - Team info: Team name, league name, standings
+ * - Team roster: Players, names and positions
  * 
  * @since       1.1.0
- * @author      Ken Davidson <ken.j.davidson@live.ca>
+ * @author      Ken Davidson
+ * 
+ * @uses apply_filters Filter 'yfs_teams_api' allows plugin and theme developers
+ *                     to customize the Teams API url.
+ * @uses apply_filters Filter 'yfs_teams_output' allows plugin and theme
+ *                     developers to customize the Teams HTML output string.
  */
 
 class YahooTeamsDisplayer implements iYahooPublicDisplayer {
@@ -163,7 +171,7 @@ class YahooTeamsDisplayer implements iYahooPublicDisplayer {
         //        . '/users;use_login=1/games;seasons=' . $seasons
         //        . '/teams;out=standings'; 
         
-        $url = Yahoo_Sports_API::API_BASE
+        $url = YahooSportsAPI::API_BASE
                 . '/users;use_login=1/games;seasons=' . $seasons 
                 . '/leagues;out=teams/teams;out=standings,roster'; 
         

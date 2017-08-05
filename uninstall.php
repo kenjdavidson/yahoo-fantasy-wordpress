@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Fired when the plugin is uninstalled.
+ * Fired when the plugin is un-installed.
  *
  * When populating this file, consider the following flow
  * of control:
@@ -11,7 +11,7 @@
  * - Run an admin referrer check to make sure it goes through authentication
  * - Verify the output of $_GET makes sense
  * - Repeat with other user roles. Best directly by using the links/query string parameters.
- * - Repeat things for multisite. Once for a single site in the network, once sitewide.
+ * - Repeat things for multisite. Once for a single site in the network, once site wide.
  *
  * This file may be updated more in future version of the Boilerplate; however, this is the
  * general skeleton and outline for how the file should work.
@@ -19,10 +19,10 @@
  * For more information, see the following discussion:
  * https://github.com/tommcfarlin/WordPress-Plugin-Boilerplate/pull/123#issuecomment-28541913
  *
- * @link       http://example.com
  * @since      1.0.0
+ * @author     Kenneth Davidson
  *
- * @package    Plugin_Name
+ * @package    Yahoo_Fantasy_Sports
  */
 
 // If uninstall not called from WordPress, then exit.

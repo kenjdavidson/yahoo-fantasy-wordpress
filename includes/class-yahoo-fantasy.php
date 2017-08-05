@@ -10,7 +10,7 @@
  * @since      1.0.0
  *
  * @package    Yahoo_Fantasy
- * @subpackage Yahoo_Fantasy/includesÏ
+ * @subpackage Yahoo_Fantasy/includes
  */
 
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-yahoo-oauth.php';

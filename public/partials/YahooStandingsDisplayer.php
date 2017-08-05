@@ -3,12 +3,24 @@
 require_once __DIR__ . '/IYahooPublicDisplayer.php';
 
 /**
- * Class used to display Game summary information.  This takes the XML response
- * from the /games collection and displays an unordered list showing the name
- * of the game, plus the year in which the game belongs.
+ * Class used to display Game summary information.  The standings for each 
+ * league are displayed in a table showing:
+ * 
+ * - Team name
+ * - Manager
+ * - Position
+ * - Points for/Wins-losses
+ * 
+ * First through third place are marked with solid left borders colored with
+ * the matching medal (gold, silver and bronze).
  * 
  * @since       1.1.0
- * @author      Ken Davidson <ken.j.davidson@live.ca>
+ * @author      Ken Davidson 
+ * 
+ * @uses apply_filters Filter 'yfs_standings_api' allows plugin and theme developers
+ *                     to customize the Standings API url.
+ * @uses apply_filters Filter 'yfs_standings_output' allows plugin and theme
+ *                     developers to customize the Standings HTML output string.
  */
 class YahooStandingsDisplayer implements iYahooPublicDisplayer {
     
@@ -135,7 +147,7 @@ class YahooStandingsDisplayer implements iYahooPublicDisplayer {
                 ? $options['seasons']
                 : getDate()['year'];
         
-        $url = Yahoo_Sports_API::API_BASE 
+        $url = YahooSportsAPI::API_BASE 
                 . '/users;use_login=1/games;seasons=' . $seasons 
                 . '/leagues;out=standings';        
         

@@ -3,12 +3,21 @@
 require_once __DIR__ . '/IYahooPublicDisplayer.php';
 
 /**
- * Class used to display Leagues summary information.  This takes the XML response
- * from the /leagues collection and displays an unordered list showing the name
- * of the game, plus the year in which the game belongs.
+ * Class used to display Leagues summary information.  The leagues displayed
+ * a table per game (nfl, nhl, etc) which includes:
+ * 
+ * - League name
+ * - Scoring type
+ * - Current week
+ * - Number of teams
+ * - Current position
  * 
  * @since      1.1.0
- * @author     Ken Davidson <ken.j.davidson@live.ca>
+ * 
+ * @uses apply_filters Filter 'yfs_leagues_api' allows plugin and theme developers
+ *                     to customize the Leagues API url.
+ * @uses apply_filters Filter 'yfs_leaues_output' allows plugin and theme
+ *                     developers to customize the Leagues HTML output string.
  */
 class YahooLeaguesDisplayer implements iYahooPublicDisplayer {
     
@@ -120,7 +129,7 @@ class YahooLeaguesDisplayer implements iYahooPublicDisplayer {
                 ? $options['seasons']
                 : getDate()['year'];
         
-        $url = Yahoo_Sports_API::API_BASE
+        $url = YahooSportsAPI::API_BASE
                 . '/users;use_login=1/games;seasons=' . $seasons 
                 . '/leagues;out=settings';   
         

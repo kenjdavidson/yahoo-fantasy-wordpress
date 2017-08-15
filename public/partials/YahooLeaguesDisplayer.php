@@ -44,7 +44,7 @@ class YahooLeaguesDisplayer implements iYahooPublicDisplayer {
 
             if (!$game->exception) {  
                 $output .= "<span class='game-name'>{$game->name} ({$game->season})</span>\n";
-                $output .= $this->outputLeagueTable($game, $otions);
+                $output .= $this->outputLeagueTable($game, $options);
             }
             
             $output .= '</div>'; 

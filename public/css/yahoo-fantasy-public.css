@@ -34,6 +34,11 @@
     font-weight: 400;
 }
 
+.fantasy-sports ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
 .fantasy-sports ul li {
     list-style-type: circle;
     list-style-position: inside;
@@ -68,7 +73,7 @@
 .yahoo-fantasy .yahoo-team.row,
 .yahoo-fantasy .yahoo-team.league,
 .yahoo-fantasy .yahoo-team.standing {
-    margin: 0px;
+    margin: 16px 0px 8px 0px;
 }
 
 .team-logo {
@@ -152,11 +157,61 @@
 /*
  * 4. Team Resource Styles
  */
-
-.yahoo-fantasy .yahoo-team.row {
-    margin-top: 16px;
+.league-name.title {
+    text-align: center;
+    width: 100%;
+    display: block;
+    color: #FFF;
+    background-color: rgba(0,0,0,0.5);
+    border-bottom: 0px;
+}
+    
+.team-matchup {
+    margin: 8px;
 }
 
-.team-info .team-name {
-    font-weight: 400;
+.team-score .total-points,
+.team-info .team-name{
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.team.player div.team-logo {
+    order: 3;
+}
+
+.team.player div.team-score {
+    order: 2;
+}
+
+.team div.team-score {
+    text-align: center;
+}
+
+.team div.team-score span {
+    display: block;
+}
+
+.team.player div.team-info {
+    text-align: right;
+    order: 1;
+}
+
+.team-info span {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .team.player div.team-logo {
+        order: 1;
+    }
+
+    .team.player div.team-score {
+        order: 2;
+    }
+
+    .team.player div.team-info {
+        text-align: left;
+        order: 3;
+    }  
 }

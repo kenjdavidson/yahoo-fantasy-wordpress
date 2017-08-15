@@ -17,6 +17,8 @@ require_once __DIR__ . '/IYahooPublicDisplayer.php';
  *                     to customize the Teams API url.
  * @uses apply_filters Filter 'yfs_teams_output' allows plugin and theme
  *                     developers to customize the Teams HTML output string.
+ * @uses apply_filters Filter 'yfs_position_text' allowing the user to augment
+ *                     the position (1st, 2nd, etc).
  */
 
 class YahooTeamsDisplayer implements iYahooPublicDisplayer {
@@ -50,32 +52,26 @@ class YahooTeamsDisplayer implements iYahooPublicDisplayer {
                 $gameCode = $game->code;
                 $gameSeason = $game->season;
                 
-                $output .= "<div class='yahoo-game'>"
-                        . "<span class='game-name'>{$gameName} ({$gameSeason})</span>";
+                $output .= "<div class='yahoo-game'>";
                 
                 foreach($game->leagues->league as $league) {
                     
-                    $leagueName = $league->name;
-                    $leagueScoring = $league->scoring_type;
+                    $leagueStandings = $this->getLeagueStandings($league);
+                    $currentWeek = $league->current_week;
+                    
+                     $output .= "<span class='league-name title'>{$league->name} (Week {$currentWeek})</span>";
                     
                     // There should only ever be 1 team per league, but just
                     // incase we can loop through them and display the information
-                    foreach($league->teams->team as $team) {                        
-                        $output .= "<div class='yahoo-team row'>"
-                                . "  <div class='team-logo col-xs-4 col-sm-2 col-md-2'>"
-                                . "    <img class='yahoo-logo' data-yahoo-logo='{$team->team_logos->team_logo->url}' />"
-                                . "  </div>"
-                                . "  <div class='team-info col-xs-8 col-sm-5 col-md-5 col-lg-5'>"
-                                . "    <span class='team-name'>{$team->name}</span><br/>"
-                                . "    <span class='league-name'>{$leagueName}</span></br>";
-                                
-                        $output .= $this->displayStandings($team, $league, $options);
-                                
-                        $output .= "  </div>"
-                                . "  <div class='team-roster col-xs-12 col-sm-5 col-md-5'>"
-                                . $this->displayRoster($team->roster)
-                                . "  </div>"
-                                . "</div>";   
+                    foreach($league->teams->team as $team) { 
+                        
+                        $matchup = $team->matchups->matchup[$currentWeek-1];
+                        $standings = $team->team_standings;
+                        $output .= "<div class='yahoo-team matchup row'>"
+                                . $this->displayTeam($matchup->teams->team[0], $leagueStandings, $options)
+                                . $this->displayTeam($matchup->teams->team[1], $leagueStandings, $options)
+                                .  "</div>";
+                                  
                     }                   
                 }
             
@@ -90,49 +86,54 @@ class YahooTeamsDisplayer implements iYahooPublicDisplayer {
     }
     
     /**
-     * Parse the roster information and displays the players in a list.
-     * @param type $roster
+     * Convert the leagues standings into a map of team Id to SimpleXMLElement
+     * for each team.
+     * @param SimpleXMLElement $league
      */
-    private function displayRoster($roster, $options) {
-        $players = '<ul>';
+    private function getLeagueStandings($league) {
         
-        foreach($roster->players->player as $player) {
-            $players .= "<li class='player'>"
-                    . "<span class='name'>{$player->name->full}</span>"
-                    . "<span class='number'>{$player->uniform_number}</span>"
-                    . "<span class='position'>({$player->display_position})</span>";
+        foreach($league->standings->teams->team as $team) {
+            $standings[(string) $team->team_key] = $team;
         }
         
-        $players .= '</ul>';
-        
-        return $players;
+        return $standings;
     }
     
     /**
-     * Parse the Standing information.  Standing information is based on either
-     * the roto points, the head to head standings or text stating that the
-     * league has not yet started.
-     * @param XML $team
-     * @param XML $league
-     * @return String
+     * Convert a team XML to an HTML grouping
+     * @param SimpleXMLElement $team
+     * @param Map<int,SimpleXMLElement> $standings
+     * @param mixed $options
+     * @return string
      */
-    private function displayStandings($team, $league, $options) {
-        $standings = $team->team_standings;
+    private function displayTeam($team, $standings, $options) {       
+        $isPlayer = 'opponent';
         
-        $outcome = ($team->league_scoring_type == "head") 
-                    ? "({$standings->outcome_totals->wins} - {$standings->outcome_totals->losses} - {$standings->outcome_totals->ties})" 
-                    : "";
-        $points = ($team->league_scoring_type == "head")
-                    ? (!$standings->points_for) ?  "" : "Points for: {$standings->points_for} Points Against: {$standings->points_against}"
-                    : "Points for: {$standings->points_for} Points back: {$standings->points_back}";        
+        foreach($team->managers->manager as $manager) {
+            if ($manager->is_current_login) {
+                $isPlayer = 'player';
+            }              
+        }
         
-        if (!empty($standings->rank)) {
-            return "    <span class='team-rank'>{$this->printOrdinal($standings->rank)}</span>"
-                   . "    <span class='team-outcome'>{$outcome}</span><br/>"
-                   . "    <span class='team-points'>{$points}</span>";    
-        } else {
-            return "<span>League has not started</span>";
-        }        
+        //$team->managers->manager[0]->is_current_login ? 'player' : 'opponent';
+        $ts = $standings[(string)$team->team_key]->team_standings;
+        $pos = $this->printOrdinal($ts->rank);
+        
+        $output = "<div class='team {$isPlayer} team-id-{$team->team_id} col-xs-12 col-sm-6 row middle-sm'>"
+            . "  <div class='team-logo col-xs-2'>"
+            . "    <img class='yahoo-logo' data-yahoo-logo='{$team->team_logos->team_logo->url}' />"
+            . "  </div>"
+            . "  <div class='team-score col-xs-3 col-sm-2'>"
+            . "     <span class='total-points'>{$team->team_points->total}</span>"
+            . "     <span class='projected-points'>{$team->team_projected_points->total}</span>"
+            . "   </div>"
+            . "   <div class='team-info col-xs-7 col-sm-8'>"
+            . "     <span class='team-name'>{$team->name}</span>"
+            . "     <span class='team-rank'>{$ts->outcome_totals->wins} {$ts->outcome_totals->losses} {$ts->outcome_totals->ties} {$pos}</span>"
+            . "   </div>"
+            . " </div>";                       
+        
+        return $output;
     }
 
     /**
@@ -140,12 +141,19 @@ class YahooTeamsDisplayer implements iYahooPublicDisplayer {
      * @param String $rank
      * @return String ordinal
      */
-    private function printOrdinal($number) {
+    private function printOrdinal($number) {    
+        $pos = '';
         $ends = array('th','st','nd','rd','th','th','th','th','th','th');
-        if ((($number % 100) >= 11) && (($number%100) <= 13))
-            return $number. 'th';
-        else
-            return $number. $ends[$number % 10];
+        
+        if (strlen($number) == 0) {
+            
+        } else if ((($number % 100) >= 11) && (($number%100) <= 13)) {
+            $pos .= "{$number}th";
+        } else {
+            $pos .= $number . $ends[$number % 10];
+        }
+        
+        return apply_filters( 'yfs_position_text', $pos);
     }
 
     /**
@@ -173,7 +181,7 @@ class YahooTeamsDisplayer implements iYahooPublicDisplayer {
         
         $url = YahooSportsAPI::API_BASE
                 . '/users;use_login=1/games;seasons=' . $seasons 
-                . '/leagues;out=teams/teams;out=standings,roster'; 
+                . '/leagues;out=standings,teams/teams;out=matchups'; 
         
         return apply_filters( 'yfs_teams_api', $url, $options );
     }

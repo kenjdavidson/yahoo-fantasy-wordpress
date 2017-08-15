@@ -3,23 +3,14 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @link       http://example.com
- * @since      1.0.0
- *
- * @package    yahoo-fantasy
- * @subpackage yahoo-fantasy/admin
- */
-
-/**
- * The admin-specific functionality of the plugin.
- *
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
  * @package    yahoo-fantasy
  * @subpackage yahoo-fantasy/admin
+ * 
  * @author     Bob Webster <bwebster@azionebi.com>
- * @aurtho     Ken Davidson <ken.j.davidson@live.ca>
+ * @author     Ken Davidson <ken.j.davidson@live.ca>
  */
 class Yahoo_Fantasy_Admin {
 
@@ -68,10 +59,12 @@ class Yahoo_Fantasy_Admin {
         // Add the administration menu callback and the register settings
         add_action('admin_menu', array(&$this, 'add_menu'));
         add_action('admin_init', array(&$this, 'register_yfsettings'));
+        
+        // Add the Admin AJAX method handling
     }
 
     /**
-     * Register the stylesheets for the admin area.
+     * Register the style sheets for the Administration area.
      *
      * @since    1.0.0
      */
@@ -85,7 +78,7 @@ class Yahoo_Fantasy_Admin {
     }
 
     /**
-     * Register the JavaScript for the admin area.
+     * Register the JavaScript for the Administration area.
      *
      * @since    1.0.0
      */

@@ -23,8 +23,20 @@
     clear: both;
 }
 
-.fantasy-sports .title {
+.fantasy-sports span.game-name {
+    display: inline-block;
+    width: 100%;
+    color: #000;
+    border-bottom: 2px solid #0078FF;
+    margin-bottom: 10px;
+    padding: 2px 0px;
+    text-transform: uppercase;
+    font-weight: 400;
+}
 
+.fantasy-sports ul {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .fantasy-sports ul li {
@@ -36,47 +48,90 @@
     padding: 0px 10px 0px 0px;
 }
 
-.fantasy-sports table {
-    overflow: scroll;
-    display: block;
-}
-
-.fantasy-sports table td {
-    padding: 2px 10px;
-}
-
 .fantasy-sports table tr.users-team {
     background-color: rgba(0,0,0,0.1);
 }
 
+.fantasy-sports table thead td,
+.fantasy-sports table thead th {
+    font-weight: 400;
+}
+
+.fantasy-sports table tbody td {
+    padding: 0px 8px;
+}
+
+.fantasy-sports .title {
+    font-size: 1.1em;
+    font-weight: 400;
+}
+
+.yahoo-fantasy.container {
+    width: 100%;
+}
+
+.yahoo-fantasy .yahoo-team.row,
+.yahoo-fantasy .yahoo-team.league,
+.yahoo-fantasy .yahoo-team.standing {
+    margin: 16px 0px 8px 0px;
+}
+
+.team-logo {
+    text-align: center;
+}
+
+.team-logo img {
+    min-width: 50px;
+    max-width: 75px;
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+}
+
+@media screen and (max-width: 600px) {
+    .yahoo-league {
+        width:100%;
+    }
+    
+    .yahoo-fantasy table thead {
+        display: none;
+    }
+    
+    .yahoo-fantasy table tr:nth-of-type(2n) {
+        background-color: inherit;
+    }
+    
+    .yahoo-fantasy table tr td:first-child {
+        font-weight:400;
+        font-size:1.1em;
+    }
+    
+    .yahoo-fantasy table tbody td {
+        display: block;  
+        text-align:center;
+    }
+    
+    .yahoo-fantasy table tbody td:before { 
+        content: attr(data-th); 
+        display: block;
+        text-align:center;  
+     }
+}
+
 /*
  * 2. Game Resource styles
+ * Game resources styles contain the wrapper for the game details and any 
+ * custom table functions.
  */
 
 .yahoo-game {
     margin-top: 15px;
 }
 
-.yahoo-game .game-name {
-    display: inline-block;
-    width: 100%;
-    color: #000;
-    border-bottom: 2px solid #0078FF;
-    margin-bottom: 10px;
-    padding: 2px 10px;
-    text-transform: uppercase;
-}
-
-.yahoo-game table td {
-    width: 20%;
-}
-
-.yahoo-game table td.league-name {
-    width: 40%;
-}
-
 /*
  * 3. League Resource styles
+ * Provides styles for Yahoo League specific section.  Some of the specific
+ * styles set the title, the margins and the table customizations.
  */
 
 .yahoo-league {
@@ -85,25 +140,6 @@
 
 .yahoo-league .game-code {
     display: none;
-}
-
-.yahoo-league .league-name {
-    display: inline-block;
-    width: 100%;
-    color: #000;
-    border-bottom: 2px solid #0078FF;
-    margin-bottom: 10px;
-    padding: 2px 10px;
-    text-transform: uppercase;
-}
-
-.yahoo-league table td {
-    width: 20%;
-}
-
-.yahoo-league table td.team-name,
-.yahoo-league table td.team-manager {
-    width: 30%;
 }
 
 .yahoo-league table tr.position-1 {
@@ -118,45 +154,64 @@
     border-left: 5px solid #b37700;
 }
 
-/**
- * Team resource
+/*
+ * 4. Team Resource Styles
  */
-
-.yahoo-team {
-    content: "";
-    clear: both;
-    display: table;
-    margin-top: 15px;
-}
-
-.yahoo-team .team-logo {
-    float: left;
-}
-
-.yahoo-team .team-info {
-    float: left;
-}
-
-.team-logo .team-game {
-    display: none;
-}
-
-.team-logo .yahoo-logo {
-    width: 50px;
-    max-width: 50px;
-    height: auto;
-    border-radius: 50%;
-    float:left;
-    margin: 0px 10px;
-}
-
-.yahoo-team .team-info .team-name {
-    display: block;
+.league-name.title {
+    text-align: center;
     width: 100%;
-    font-size: 1.2em;
-    font-weight: 400;
+    display: block;
+    color: #FFF;
+    background-color: rgba(0,0,0,0.5);
+    border-bottom: 0px;
+}
+    
+.team-matchup {
+    margin: 8px;
 }
 
-.yahoo-team .team-info .team-points {
+.team-score .total-points,
+.team-info .team-name{
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.team.player div.team-logo {
+    order: 3;
+}
+
+.team.player div.team-score {
+    order: 2;
+}
+
+.team div.team-score {
+    text-align: center;
+}
+
+.team div.team-score span {
     display: block;
+}
+
+.team.player div.team-info {
+    text-align: right;
+    order: 1;
+}
+
+.team-info span {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .team.player div.team-logo {
+        order: 1;
+    }
+
+    .team.player div.team-score {
+        order: 2;
+    }
+
+    .team.player div.team-info {
+        text-align: left;
+        order: 3;
+    }  
 }

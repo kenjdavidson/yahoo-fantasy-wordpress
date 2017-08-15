@@ -1,26 +1,42 @@
 <?php
 
-require_once __DIR__ . '/interface-yahoo-public-displayer.php';
+require_once __DIR__ . '/IYahooPublicDisplayer.php';
 
 /**
- * Class used to display Game summary information.  This takes the XML response
- * from the /games collection and displays an unordered list showing the name
- * of the game, plus the year in which the game belongs.
+ * Class used to display Game summary information.  The standings for each 
+ * league are displayed in a table showing:
+ * 
+ * - Team name
+ * - Manager
+ * - Position
+ * - Points for/Wins-losses
+ * 
+ * First through third place are marked with solid left borders colored with
+ * the matching medal (gold, silver and bronze).
  * 
  * @since       1.1.0
- * @author      Ken Davidson <ken.j.davidson@live.ca>
+ * @author      Ken Davidson 
+ * 
+ * @uses apply_filters Filter 'yfs_standings_api' allows plugin and theme developers
+ *                     to customize the Standings API url.
+ * @uses apply_filters Filter 'yfs_standings_output' allows plugin and theme
+ *                     developers to customize the Standings HTML output string.
  */
-class PublicStandingsDisplay implements iYahooPublicDisplayer {
+class YahooStandingsDisplayer implements iYahooPublicDisplayer {
     
     /**
      * Convert the Yahoo XML response into an unordered list of Games.  This 
      * XML should contain a <users> entry as the main level; and should be 
      * followed down to the <game> elements.
      * 
+     * The output is run through the filter 'yfs_standings_output' using the
+     * $output and $xml as arguments.
+     * 
      * @param SimpleXMLElemnt $xml
+     * @param Mixed $options
      * @return String
      */
-    public function display($xml) {
+    public function getDisplayContent($xml, $options) {
         
         // Handle all the leagues for which the user is apart of.  For
         // whatever reason the xml returned for the games/leagues;standings
@@ -36,7 +52,7 @@ class PublicStandingsDisplay implements iYahooPublicDisplayer {
                 
                 foreach($game->leagues->league as $league) {
                     
-                    $output .= $this->outputLeagueTable($league, $game);
+                    $output .= $this->outputLeagueTable($league, $game, $options);
 
                 } // End league                                                
             } // End exception
@@ -45,7 +61,7 @@ class PublicStandingsDisplay implements iYahooPublicDisplayer {
         $output .= "</div>\n";
         
         //return $this->oauth->getLastResponse(); 
-        return $output;         
+        return apply_filters( 'yfs_standings_output', $output, $xml, $options );         
     }
 
    /**
@@ -57,26 +73,26 @@ class PublicStandingsDisplay implements iYahooPublicDisplayer {
      * @param XML $league
      * @return String
      */
-    private function outputLeagueTable($league = null, $game = null) {
+    private function outputLeagueTable($league = null, $game = null, $options) {
         if ($league == null) return "";
         
         $gameType = $league->scoring_type;
                     
         $output = "<div class='yahoo-league {$game->name} game-{$game->game_id} league-{$league->league_id}'>\n";
-        $output .= "<span class='league-name'>{$league->name} ({$league->season})</span>\n";
+        $output .= "<span class='league-name title'>{$league->name} ({$league->season})</span>\n";
         $output .= "<table>\n";
         $output .= "<thead>\n"
                 . "<tr>\n"
-                . "<td class='team-name'>Team Name</td>"
-                . "<td class='team-manager'>Manager</td>"
-                . "<td class='team-postiion'>Position</td>";
+                . "<th class='team-name'>Team Name</td>"
+                . "<th class='team-manager'>Manager</td>"
+                . "<th class='team-postiion'>Position</td>";
 
         // Base the next few columns on the specific game type and available 
         // information.
         if ($gameType == "head") {
-            $output .= "<td class='team-record'>Record</td>";                      
+            $output .= "<th class='team-record'>Record</td>";                      
         } else {
-            $output .= "<td class='team-points-for'>Points</td>";
+            $output .= "<th class='team-points-for'>Points</td>";
         }
 
         $output .= "</tr>\n"
@@ -110,5 +126,32 @@ class PublicStandingsDisplay implements iYahooPublicDisplayer {
         $output .= "</div>\n";
                 
         return $output;
-    }    
+    }
+
+    /**
+     * Provides the Yahoo Sports Standings endpoint.  The PublicStandingDisplay
+     * class accepts and uses the following options:
+     * 
+     * $options = [
+     *  'seasons' => String of season/year values
+     * ]
+     * 
+     * API Url is pushed through filter 'yfs_standings_api' for customization.
+     * the $output and $options are provided as arguments.
+     * 
+     * @param type $options
+     */
+    public function getRequestEndpoint($options) {
+        
+        $seasons = array_key_exists('seasons', $options)
+                ? $options['seasons']
+                : getDate()['year'];
+        
+        $url = YahooSportsAPI::API_BASE 
+                . '/users;use_login=1/games;seasons=' . $seasons 
+                . '/leagues;out=standings';        
+        
+        return apply_filters( 'yfs_standings_api', $url, $options );
+    }
+
 }

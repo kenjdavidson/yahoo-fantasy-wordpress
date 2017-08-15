@@ -20,8 +20,13 @@
  * @subpackage Yahoo_Fantasy/public
  * @author     Bob Webster <bwebster@azionebi.com>
  * @author     Ken Davidson <ken.j.davidson@live.ca>
+ * 
+ * @uses apply_filters('yfs_request_error_text', String)
+ * @uses apply_filters('yfs_request_error_class', String)
+ * @uses apply_filters('yfs_parse_error_text', String)
+ * @uses apply_filters('yfs_parse_error_class', String)
  */
-class Yahoo_Fantasy_Public {
+class YahooFantasyPublic {
 
     /**
      * The ID of this plugin.
@@ -74,11 +79,17 @@ class Yahoo_Fantasy_Public {
     }
 
     /**
-     * Register the stylesheets for the public-facing side of the site.
+     * Register the style sheets for the public-facing side of the site.  The 
+     * public plugin uses the skeleton css framework for display purposes.
      *
      * @since    1.0.0
      */
     public function enqueue_styles() {
+        wp_enqueue_style('flexboxgrid',
+                plugin_dir_url(__FILE__) . 'css/flexboxgrid.min.css', 
+                array(), 
+                '6.3.1', 
+                'all');
         wp_enqueue_style($this->plugin_name, 
                 plugin_dir_url(__FILE__) . 'css/yahoo-fantasy-public.css', 
                 array(), 
@@ -103,7 +114,6 @@ class Yahoo_Fantasy_Public {
      * Perform any final initialization.  This takes care of adding all the 
      * other Actions, Filters and Events that are needed to perform the public
      * display of the YahooFantasy plugin.
-     * 
      */
     protected function init() {        
         // Styles and Scripts cannot be enqueued prior to the wp_enqueue_scripts
@@ -115,7 +125,7 @@ class Yahoo_Fantasy_Public {
         
         // [yahoofantasysports] shortcode.
         yahooSportsLogger('Adding [yahoofantasysports] shortcode.');
-        add_shortcode('yahoofantasysports', array(&$this, 'yahoo_fantasy_shortcode'));
+        add_shortcode('yahoofantasysports', array(&$this, 'handleShortcode'));
     }
 
     /**
@@ -123,24 +133,17 @@ class Yahoo_Fantasy_Public {
      * code attributes determine what information is displayed.   The bare bones
      * shortcode displays the users game summary, a small list of sports in which
      * the user had played in for a particular season.  Some other display types
-     * are:
-     * 
-     * - games: display a list of games (default)
-     * - leagues: display a list of leagues
-     * - matchups: display a list of matchups for the current week
-     * - standings: displays all the league standings (overall)
-     * 
-     * TODO: Should eventually set this up to call custom hooks.
+     * are:   
      * 
      * @param Array $atts
      * @param String $content
      * @param String $tag
      * @return String
      */    
-    public function yahoo_fantasy_shortcode($atts = [], $content = null, $tag = '') {
+    public function handleShortcode($atts = [], $content = null, $tag = '') {
         
         /* @var $the_user WP_User */
-       $atts = array_change_key_case((array)$atts, CASE_LOWER);
+       $attr_lower = array_change_key_case((array)$atts, CASE_LOWER);
 
        // Override default attributes with user attributes
        $options = shortcode_atts([
@@ -151,55 +154,72 @@ class Yahoo_Fantasy_Public {
                'title'       => 'Yahoo! Fantasy',
                'title-wrap'  => 'h4',
                'title-class' => 'title'
-           ], $atts, $tag);
+           ], $attr_lower, $tag);
 
        $result = '';
-
        $result .= "<{$options['wrap']} class=\"{$options['wrap-class']}\">";
        $result .= "<{$options['title-wrap']} class=\"{$options['title-class']}\">{$options['title']}</{$options['title-wrap']}>";
 
-       $result .= do_shortcode($content);
-              
+       $result .= do_shortcode($content);        
+       
+        switch($options['type']) {
+           
+            case "teams":
+            case "Teams":
+                require_once( __DIR__ . '/partials/YahooTeamsDisplayer.php');
+                $displayer = new YahooTeamsDisplayer();
+                break;
+            case "leagues":
+            case "Leagues":
+                require_once( __DIR__ . '/partials/YahooLeaguesDisplayer.php');
+                $displayer = new YahooLeaguesDisplayer();
+                break;
+            case "matchups":
+            case "Matchups":
+                require_once(__DIR__ . '/partials/YahooMatchupDisplayer.php');
+                $displayer = new YahooMatchupDisplayer();
+                break;
+            case "standings":
+            case "Standings":
+                require_once( __DIR__ . '/partials/YahooStandingsDisplayer.php' );
+                $displayer = new YahooStandingsDisplayer();
+                break;
+            case "games":
+            case "Games":
+            default:
+                require_once( __DIR__ . '/partials/YahooGamesDisplayer.php' );
+                $displayer = new YahooGamesDisplayer();
+                break;
+        }              
+        
+        // Get the URL from the IYahooPublicDisplayer class returned
+        $url = $displayer->getRequestEndpoint($options);
+        
         // Attempt the request based on the type requested and the season(s)
         // provided.  If there is an error making or getting the request, the
-        // information is returned.
-        if (!$this->doOAuthRequest($options['type'], $options['seasons'])) {
-            return $this->htmlError("Unable to retrieve {$options['type']} data.");
+        // information is returned.  The error text is run through the
+        // filter 'ysf_request_error_text' to be replaced or appended
+        if (!$this->doOAuthRequest($url)) {
+            $errorText = apply_filters('ysf_request_error_text',
+                    "Unable to retrieve {$options['type']} data.  "
+                    . "Please try a control-refresh or check your administration "
+                    . "settings.");
+            $errorClass = apply_filters('ysf_request_error_class', 'error');
+            return $this->htmlError($errorText, $errorClass);
         }
-        
-       switch($options['type']) {
-           case "teams":
-           case "Teams":
-               require_once( __DIR__ . '/partials/class-yahoo-public-teams-display.php');
-               $displayer = new PublicTeamsDisplay();
-               break;
-           case "leagues":
-           case "Leagues":
-               require_once( __DIR__ . '/partials/class-yahoo-public-leagues-display.php');
-               $displayer = new PublicLeaguesDisplay();
-               break;
-           case "matchups":
-           case "Matchups":
-               break;
-           case "standings":
-           case "Standings":
-               require_once( __DIR__ . '/partials/class-yahoo-public-standings-display.php' );
-               $displayer = new PublicStandingsDisplay();
-               break;
-           case "games":
-           case "Games":
-           default:
-               require_once( __DIR__ . '/partials/class-yahoo-public-games-display.php' );
-               $displayer = new PublicGamesDisplay();
-               break;
-        }        
-        
-        // Convert the 
+                       
+        // Convert the response to a SimpleXMLElement and pass it into the
+        // displayer interface.
         try {
+            yahooSportsLogger($this->oauth->getLastResponse());
             $fantasy = new SimpleXMLElement($this->oauth->getLastResponse());
-            $result .= $displayer->display($fantasy);            
+            $result .= $displayer->getDisplayContent($fantasy, $options);            
         } catch (Exception $ex) {
-            $result .= '<span class="error">Could not parse Yahoo! Services response</span>';
+            yahooSportsLogger($ex->getMessage());
+            $parseErrorText = apply_filters('ysf_parse_error_text', 
+                    'Could not parse Yahoo! Services response.');
+            $parseErrorClass = apply_filters('ysf_parse_error_class','error');                  
+            $result .= $this->htmlError($parseErrorText, $parseErrorClass);
         }
 
         $result .= '</' . $options['wrap'] . '>';
@@ -212,26 +232,17 @@ class Yahoo_Fantasy_Public {
      * and the season that is supplied.  The current year is always defaulted
      * to the season.
      * 
-     * @param type $endpoint
-     * @param type $season
+     * @param String $url
      */
-    protected function doOAuthRequest($endpoint, $season = null) {
-        
-        // If there was no/null season supplied then the current season will
-        // be looked up.
-        if (!$season) {
-            $season = getDate()['year'];
-        }       
-        
-        $url = Yahoo_Sports_API::endpointBySeason($endpoint, $season);
-
+    protected function doOAuthRequest($url) {
+       
         $resOk = $this->oauth->request($url);
+        
         if (!$resOk){
             
             // Attempt to refresh the token
             if ($this->oauth->refreshAccessToken()) {
-                $resOk = true;
-                
+
                 // Update the Wordpress Options
                 update_option('yf_access_token', $this->oauth->getAccessToken());
                 update_option('yf_access_secret', $this->oauth->getAccessSecret());
@@ -256,9 +267,11 @@ class Yahoo_Fantasy_Public {
     }
     
     /**
-     * Wrap the provided message in standard HTML.  This should be used for 
-     * error messages and other single serving messages.
-     * @param type $msg
+     * Helper method used to convert error messages into specific HTML
+     * <span class="$class"> element.
+     * 
+     * @param String $msg
+     * @param String $class 
      */
     private function htmlError($msg, $class = 'error') {
         return  '<span class="' . $class . '">' 

@@ -233,7 +233,6 @@ class Yahoo_OAuth {
                 $resOk = true;                
             } else {
                 $this->logDebug('Yahoo_OAuth: Refresh unsuccessful - ' . $body_parsed['oauth_problem']);
-                $resOk = false;
             }
          
         } else {

@@ -18,32 +18,44 @@
     <p>
         The Yahoo Fantasy Sports plugin allows you to include details about
         your Yahoo Fanasty teams and leagues, within your pages and posts.  Using
-        the [yahoofantasysports] shortcode, you can add the following details:
+        the shortcode described below, you can display specific information
+        from your Yahoo! sports account.
+    </p>
+    <p>
+        The quickest shortcode to use is [yahoofantasysports type="TYPE"] where
+        TYPE is replaced with one of the following:
         
         <ul class="about-intro">
             <li>
-                Games, a listing of games in which you have been registered
-                over a number of seasons.  Games in Yahoo Fantasy terms are the
-                sports in which your teams exist: Footbal, Baseball, etc.
+                <h5>Games</h5>
+                Displays and unordered list of the games which the user is/was
+                registered to.  This is the highest level info that can be 
+                displayed.
             </li>
             <li>
-                Leagues, a listing of the leagues for each game (sport).  You
-                may contain one or many teams within leagues for a specific
-                game (sport).
+                <h5>Leagues</h5>
+                Displays a table for each game the user is/was registered to.  
+                Each table consists of the leagues within that game that were
+                active during the specific season.  Columns in the tables are:
+                League name, Start Date, End Date, Scoring Type and Number of
+                Teams.
             </li>
             <li>
-                Teams, a listing of each of your teams; displaying information
-                such as: image, name, position/standing, score, etc.  Teams 
-                are displayed as badges, for easy access.
+                <h5>Teams</h5> 
+                Displays a quick peak of the teams in which a user is registered.
+                The badge displays a general info about the team, plus a quick
+                peak at the top players on the team.
             </li>
             <li>
-                Standings, a table of your leagues standings.  Standings show 
+                <h5>Standings</h5>
+                Displays Atable of your leagues standings.  Standings show 
                 all teams within the league and which position they are 
                 currently in.  If the league is finished, the top three teams
                 are displayed with their medal colors.
             </li>
             <li>
-                Matchups, a listing of the leagues current matchups.  Matchups
+                <h5>Matchups</h5> 
+                Displays a listing of the leagues current match-ups.  Match-ups
                 will only be displayed when the season is in progress.  When
                 the season is over this will default to the Teams display.
             </li>
@@ -75,7 +87,7 @@
         </ul>
     </p>
     
-    <h1>Yahoo Fantasy Sports Shortcode</h1>
+    <h1>Yahoo Fantasy Sports Options</h1>
     <p>
         To display Yahoo Fantasy content on your pages and posts, the shortcode
         <b>[yahoofantasysports]</b> is used.  The shortcode allows for content
@@ -112,6 +124,23 @@
                 you to choose a specific year or years to display within this
                 specific shortcodes content.  Multiple seasons can be added 
                 with a comma [... seasons="2015,2016"]
+            </li>
+        </ul>
+    </p>
+    
+    <h1>Yahoo Displayer Customization</h1>
+    <p>
+        There are a number of ways to customize the way that the Yahoo!
+        Sports shortcodes are displpayed:
+        <ul>
+            <li>
+                <h5>Style Sheets</h5>
+            </li>
+            <li>
+                <h5>Custom YahooPublicDisplayer</h5>
+            </li>
+            <li>
+                <h5>Wordpress Filters</h5>
             </li>
         </ul>
     </p>

@@ -1,0 +1,20 @@
+{
+    "name": "kenjdavidson/yahoo-fantasy",
+    "description": "Yahoo Fantasy Sports plugin for use in Wordpress",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "kendavidson",
+            "email": "ken.j.davidson@live.ca"
+        }
+    ],
+    "keywords": [
+        "wordpress",
+        "plugin",
+        "yahoo fantasy sports"
+    ],
+    "require": {
+        "composer/installers": "v1.4.0",
+        "kenjdavidson/oauth-yahoofantasysports": "0.1.0"
+    }
+}

@@ -181,7 +181,7 @@ class YahooTeamsDisplayer implements iYahooPublicDisplayer {
         
         $url = YahooSportsAPI::API_BASE
                 . '/users;use_login=1/games;seasons=' . $seasons 
-                . '/leagues;out=standings,teams/teams;out=matchups'; 
+                . '/leagues;out=standings,teams/teams;out=matchups';        
         
         return apply_filters( 'yfs_teams_api', $url, $options );
     }

@@ -67,6 +67,9 @@ class YahooGamesDisplayer implements iYahooPublicDisplayer {
                 . '/users;use_login=1/games;seasons='
                 . $seasons;
         
+                $url = YahooSportsAPI::API_BASE
+                . '/users;use_login=1';
+                
         return apply_filters( 'yfs_games_api', $url, $options );
     }
 

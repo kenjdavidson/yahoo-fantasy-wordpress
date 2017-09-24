@@ -10,14 +10,14 @@ namespace YahooFantasySports;
  * that starts the plugin.
  *
  * @link              http://example.com
- * @since             1.1.0
+ * @since             1.0.0
  * @package           Yahoo_Fantasy
  *
  * @wordpress-plugin
  * Plugin Name:       Yahoo Fantasy Stats
- * Plugin URI:        http://azionebi.com/yahoo-fantasy/
+ * Plugin URI:        https://github.com/kenjdavidson/yahoo-fantasy
  * Description:       Display Yahoo Sports Fantasy information within your Wordpress site.  Currently supports displaying games, leagues, standings and teams using the [yahoofantasysports] shortcode.
- * Version:           1.1.0
+ * Version:           2.0.0
  * Author:            Bob Webster
  * Author URI:        http://azionebi.com
  * Author:            Ken Davidson
@@ -28,7 +28,8 @@ namespace YahooFantasySports;
  * Domain Path:       /languages
  */
 
-require dirname( __FILE__ ) . 'YahooFantasySports.php';
+require dirname( __FILE__ ) . 'YahooFantasyRestHandler.php';
+require dirname( __FILE__ ) . 'YahooFantasyShortcodeHandler.php';
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
@@ -128,8 +129,9 @@ class YahooFantasyPlugin {
             
         }
         
-        $this->yahooI18n = new \YahooFantasySports\International\YahooFantasyI18n();
-        $this->yahooApi = new \YahooFantasySports\YahooFantasySports();
+        $this->i18n = new \YahooFantasySports\International\YahooFantasyI18n($this->pluginName, $this->version);
+        $this->shortcodes = new \YahooFantasySports\YahooFantasyRestHandler($this->pluginName, $this->version);
+        $this->rest = new \YahooFantasySports\YahooFantasyRestHandler($this->pluginName, $this->version);
     }
 
     /**

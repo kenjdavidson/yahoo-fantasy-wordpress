@@ -13,12 +13,13 @@
 requirejs.config({
     
     // All requirejs modules loaded from here
-    baseUrl: 'lib',
+    // wp_config is localized from Wordpress to provide the base plugin URL
+    baseUrl: wp_yahoo_fantasy_plugin.base_url + '/app',
     
     // Prefix remaining modules with thes name \|P_"|||:
     paths: {
-        angular: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js',        
-        ngResource: 'https://ajax.googleapis.com/ajax/libs/angularjs/X.Y.Z/angular-resource.js',
+        angular: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min',        
+        ngResource: 'https://ajax.googleapis.com/ajax/libs/angularjs/X.Y.Z/angular-resource',
         controllers: 'controllers',
         directives: 'directives',
         services: 'services'
@@ -37,10 +38,10 @@ requirejs.config({
     }
 });
 
-// Bootstrap the yfsApp module to the <div id="yfsModule"></div> document
+// Bootstrap the yfsApp module to the <div class="yahoo-fantasy-plugin"></div> document
 // element.
 require(['yfs.app'],
-  function() {
-    angular.bootstrap(angular.element('#yfsModule'), ['yfsModule']);
-  }
+    function() {
+        angular.bootstrap(angular.element('.yahoo-fantasy-plugin'), ['yfs.app']);
+    }
 );

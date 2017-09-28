@@ -28,15 +28,13 @@
 
 define([
     'angular',
-    'services/index',
-    'controllers/index',
-    'directives/index'    
+    'services/includes',
+    'directives/includes'
 ], function(angular){
    'use strict';
    
-   return angular.module('yfsModule', [
-       'yfsModule.services',
-       'yfsModule.controllers',
-       'yfsModule.directives'
-   ])
+   return angular.module('yfs.app', [
+       'yfs.services',
+       'yfs.directives'
+   ]);
 });

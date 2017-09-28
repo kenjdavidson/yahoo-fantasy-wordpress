@@ -1,0 +1,65 @@
+<h1>Yahoo! OAuth Keys</h1>
+<div class="row">
+    <div class="col-sm-12 col-lg-6">
+        <p>
+        In order for this Wordpress site to allow users to include Yahoo! Fantasy Sports
+        details on their posts and pages, you must (as an administrator) register your 
+        page on the Yahoo! developer network.  In order to do this, follow these steps:
+        </p>
+        <ol>
+            <li>
+                Open the <a href="https://developer.yahoo.com/" target="_blank">Yahoo! Developer Network</a> 
+                portal and sign in.
+            </li>
+            <li>
+                Hover over the <strong>My Apps</strong> menu in the top right corner, or
+                go to the <a href="https://developer.yahoo.com/apps/" target="_blank">My Apps</a> page.
+            </li>
+            <li>
+                Click the <strong>Create App</strong> button.
+            </li>
+            <li>
+                Complete the new application form:
+                <ul>
+                    <li>
+                        <strong>Application Name</strong> - The friendly name of your App/Wordpress page
+                    </li>
+                    <li>
+                        <strong>Application Type</strong> - Choose <u>Web Application</u>
+                    </li>
+                    <li>
+                        <strong>Description</strong> - Optional
+                    </li>
+                    <li>
+                        <strong>API Permissions</strong> - Select Fantasy Sports (read).  Currently there is only
+                        read functionality, but in the future if any more options are changed, a new Application
+                        will need to be created
+                    </li>
+                </ul>
+            </li>
+        </ol>
+        <p>
+            Once completed you'll be provided with two application keys, consumer and secret.  Put the two keys
+            into the appropriate boxes.
+        </p>
+    </div>
+    <div class="col-sm-12 col-lg-6">
+        <form novalidate>
+            <p>
+                <label class="strong" for="consumer-key">Consumer Key:</label>
+                <input id="consumer-key" type="text" ng-model="keys.consumerKey"/>
+            </p>
+            <p>
+                <label class="strong" for="consumer-secret">Consumer Secret:</label>
+                <input id="consumer-secret" type="text" ng-model="keys.consumerSecret"/>
+            </p>
+            <p>
+                <input type="button" ng-click="keys.submit()" value="Save"/>
+                <input type="button" ng-click="keys.clear()" value="Clear"/>
+            </p>
+            <p ng-bind="{{keys.status}}"/>
+        </form>
+    </div>        
+</div>
+    
+

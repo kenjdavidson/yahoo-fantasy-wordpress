@@ -1,9 +1,6 @@
 <?php
 namespace YahooFantasySports;
 
-require dirname( __FILE__ ) . 'Authentication/YahooOAuth1.php';
-require dirname( __FILE__ ) . 'International/YahooFantasyI18n.php';
-
 /**
  * YahooFantasyRESTHandler
  * 
@@ -26,9 +23,10 @@ class YahooFantasyRestHandler {
      *
      * @since    1.0.0
      */
-    public function __construct($plugin, $version) {             
+    public function __construct($plugin, $version, $admin) {             
         $this->pluginName = $plugin;
         $this->version = $version;
+        $this->isAdmin = $admin;
         $this->init();
     }
     

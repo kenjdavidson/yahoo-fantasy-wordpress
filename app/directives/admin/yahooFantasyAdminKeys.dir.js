@@ -16,33 +16,69 @@ define([
             transclude: true,
             scope: {},
             bindToController: true,
+            controllerAs: 'keys',
             controller: function() {
                 var keys = this;
                 keys.consumerKey = '';
                 keys.consumerSecret = '';
                 keys.status = '';
                 
-                keys.submit = function() {
+                keys.refresh = function() {
+                    console.log('Refreshing keys...');
+                    
+                    keys.isError = false;
+                    keys.status = undefined;
+                    
+                    $wp.getOAuthKeys()
+                            .then(function(response){
+                                console.log(response);
+                                var data = response.data;
+                                if (!data.success) {
+                                    keys.status = data.data;
+                                    keys.isError = true;
+                                } else {
+                                    keys.consumerKey = data.data.consumerKey;
+                                    keys.consumerSecret = data.data.consumerSecret;
+                                }
+                            }, function(failure){
+                                keys.status = failure.statusText;
+                                keys.isError = true;
+                            });
+                }
+                
+                keys.submit = function() {                    
+                                        
                     console.log('Submitting: ' + keys.consumerKey + ':' + keys.consumerSecret);
-                    $wp.doAjax('GET', {
-                        action: 'get_oauth_keys',
-                        consumerKey: keys.consumerKey,
-                        consumerSecret: keys.consumerSecret
-                    }, function(success){}, function(failure){});
+                    
+                    keys.isError = false;
+                    keys.status = undefined;
+                    
+                    $wp.saveOAuthKeys(keys.consumerKey, keys.consumerSecret)
+                            .then(function(response){
+                                var data = response.data;                    
+                                if (!data.success) {
+                                    keys.status = data.data;
+                                    keys.isError = true;
+                                } else {
+                                    keys.status = wp_yahoo_fantasy_plugin.text.saved_keys;
+                                }                     
+                            }, function(failure){
+                                keys.status = failure.statusText;
+                                keys.isError = true;
+                            });
                 };
                 
-                keys.clear = function() {
-                    console.log('Cleared');
-                    keys.consumerKey = undefined;
-                    keys.consumerSecret = undefined;
+                keys.cancel = function() {                           
+                    keys.refresh();
                 }
-            },
-            controllerAs: 'keys',
-            bindToController: true,
+                
+                keys.refresh();
+            },            
             link: function($scope, $element, $attrs) {
 
             }
         };
         return ddo;
    }
+   
 });

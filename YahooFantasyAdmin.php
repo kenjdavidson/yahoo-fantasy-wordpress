@@ -2,6 +2,8 @@
 
 namespace YahooFantasySports;
 
+use Exception;
+
 /**
  * Handles the creation of menus and and other specific Administration
  * features required by the plugin.
@@ -39,25 +41,85 @@ class YahooFantasyAdmin {
         add_action('admin_menu', array(&$this, 'addMenu'));
         
         // Setup AJAX requests
-        add_action('wp_ajax_get_keys', array(&$this, 'getOAuthKeys'));
-        add_action('wp_ajax_save_keys', array(&$this, 'saveOAuthKeys'));
+        add_action('wp_ajax_get_consumer_keys', array(&$this, 'getConsumerKeys'));
+        add_action('wp_ajax_save_consumer_keys', array(&$this, 'saveConsumerKeys'));
+    }
+    
+    /**
+     * Performs security checking of the Ajax request based on the Nonce for
+     * the YahooFantasy plugin, as well as the allowed permissions.
+     * @param type $allowed
+     */
+    public function checkSecurity($allowed) {        
+        if ( !check_ajax_referer( YahooFantasy::NONCE_ACTION, 'security' ) ) {
+            throw new Exception(
+                    __('Max time exceeded on Ajax requests.  Please refresh the page and try again.', 'yahoo-fantasy'));
+        }
+        
+        
+        
+        if ( !current_user_can( $allowed ) ) {
+            throw new Exception(
+                    __('User does not have the permissions required to access this functionality.', 'yahoo-fantasy'));
+        }
     }
     
     /**
      * Handles requests for getting the OAuth keys from the Wordpress plugin
      * options.  This is called by the get_keys Ajax call, but can be called
-     * from anywhere in the Plugin.
+     * from anywhere in the Plugin.   Like saving, only users with 
+     * 'manage_options' have access to get the Consumer keys
      */
-    public function getOAuthKeys() {
-        
+    public function getConsumerKeys() {
+        try {
+            $this->checkSecurity('manage_options');
+            
+            $key = get_option('yf_consumer_key');
+            $secret = get_option('yf_consumer_secret');
+            
+            $response = array(
+                'consumerKey'       => $key,
+                'consumerSecret'    => $secret                
+            );
+            wp_send_json_success($response);
+        } catch (Exception $ex) {
+            wp_send_json_error($ex->getMessage());
+        }      
     }
     
     /**
      * Handles requests for saving the OAuth keys to the Wordpress plugin 
-     * options.  This is called by the save_keys Ajax call.
+     * options.  This is called by the save_keys Ajax call.  Saving consumer
+     * keys is only allowed by users that have 'manage_options' permissions
+     * on the site.
      */
-    public function saveOAuthKeys() {
-        
+    public function saveConsumerKeys() {     
+        try {            
+            $this->checkSecurity('manage_options');
+            
+            $key = isset($_POST['consumerKey']) ? $_POST['consumerKey'] : '';
+            $secret = isset($_POST['consumerSecret']) ? $_POST['consumerSecret'] : '';
+            
+            error_log("Attempting to update Yahoo! consumer keys {$key} and {$secret}.");
+            
+            $saveKey = update_option('yf_consumer_key', $key);
+            if (!$saveKey && $key != get_option('yf_consumer_key')) {
+                throw new Exception('Could not save Yahoo! Consumer Key.  See Wordpress debug log for more information.');
+            }
+            
+            $saveKey = update_option('yf_consumer_secret', $secret);
+            if (!$saveKey && $secret != get_option('yf_consumer_secret')) {
+                throw new Exception('Could not save Yahoo! Consumer Secret.  See Wordpress debug log for more information.');
+            }            
+            
+            $response = array(
+                'consumerKey'       => $key,
+                'consumerSecret'    => $secret
+            );
+            wp_send_json_success($response);                        
+        } catch (Exception $ex) {         
+            wp_send_json_error($ex->getMessage());                               
+        } 
     }
     
     /**

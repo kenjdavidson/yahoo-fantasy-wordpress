@@ -15,6 +15,11 @@ require dirname( __FILE__ ) . '/vendor/autoload.php';
 class YahooFantasy {
     
     /**
+     * Nonce action
+     */
+    const NONCE_ACTION = 'yf_wordpress-plugin';
+    
+    /**
      * The unique identifier of this plugin.
      *
      * @since    1.0.0
@@ -103,6 +108,11 @@ class YahooFantasy {
      */
     public static function activate() {
         
+        // Add the site Consumer and Secret options
+        add_option('yf_consumer_key');
+        add_option('yf_consumer_secret');
+        
+        // Create the user Token table
     }
     
     /**
@@ -144,8 +154,14 @@ class YahooFantasy {
                 '1.0.0');
         
         $ngConfig = [
+            'nonce'     => wp_create_nonce(YahooFantasy::NONCE_ACTION),
             'base_url'  => plugin_dir_url(__FILE__),
-            'ajax_url'  => admin_url( 'admin-ajax.php' )
+            'ajax_url'  => admin_url( 'admin-ajax.php' ),
+            'text'      => array(
+                'cannot_get_keys'   => __('Cannot retrieve OAuth keys. Check Wordpress debug log for info.', 'yahoo-fantasy'),
+                'cannot_save_keys'   => __('Cannot save OAuth keys. Check Wordpress debug log for info.', 'yahoo-fantasy'),
+                'saved_keys'    => __('Successfully saved Yahoo! OAuth Consumer Keys.', 'yahoo-fantasy')
+            )
         ];
         wp_localize_script('yfsbootstrap', 'wp_yahoo_fantasy_plugin', $ngConfig);
     }

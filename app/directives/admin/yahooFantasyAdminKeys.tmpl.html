@@ -47,17 +47,21 @@
         <form novalidate>
             <p>
                 <label class="strong" for="consumer-key">Consumer Key:</label>
-                <input id="consumer-key" type="text" ng-model="keys.consumerKey"/>
+                <textarea id="consumer-key" 
+                           rows="4" 
+                           ng-model="keys.consumerKey"></textarea>
             </p>
             <p>
                 <label class="strong" for="consumer-secret">Consumer Secret:</label>
-                <input id="consumer-secret" type="text" ng-model="keys.consumerSecret"/>
+                <input id="consumer-secret" 
+                       type="text" 
+                       ng-model="keys.consumerSecret"/>
             </p>
             <p>
                 <input type="button" ng-click="keys.submit()" value="Save"/>
-                <input type="button" ng-click="keys.clear()" value="Clear"/>
+                <input type="button" ng-click="keys.cancel()" value="Cancel"/>
             </p>
-            <p ng-bind="{{keys.status}}"/>
+            <p ng-class="{'text-error':keys.isError}">{{keys.status}}</p>
         </form>
     </div>        
 </div>

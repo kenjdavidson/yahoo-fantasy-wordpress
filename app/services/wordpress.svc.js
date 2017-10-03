@@ -11,25 +11,46 @@ define([
     function WordpressService($http) {
         return {
             getTemplate: getTemplate,
-            doAjax: doAjax
+            getOAuthKeys: getOAuthKeys,
+            saveOAuthKeys: saveOAuthKeys
         };        
+        
+        function mergeParams (params) {
+            return jQuery.extend({}, {
+                security: wp_yahoo_fantasy_plugin.nonce
+            }, params);
+        }
         
         function getTemplate(template) {
             return wp_yahoo_fantasy_plugin.base_url + '/app/directives' + template;
-        };        
+        }   
         
-        function doAjax(method, params, yes, no) {
-            $http({
-                url: wp_yahoo_fantasy_plugin.ajax_url,
-                method: method,
-                params: params
-            }).then(function(success){
-                console.log(success.status + ' -> ' + success.statusText);
-                if (yes !== undefined) yes(success);
-            }, function(failure){
-                console.log(failure.status + ' -> ' + failure.statusText);
-                if (no !== undefined) no(failure);
+        function getOAuthKeys() {
+            return $http({
+               method: 'GET',
+               url: wp_yahoo_fantasy_plugin.ajax_url,
+               params: mergeParams({
+                    action: 'get_consumer_keys'
+                })
             });
         }
+        
+        function saveOAuthKeys(key, secret) { 
+            return $http({
+                method: 'POST',
+                url: wp_yahoo_fantasy_plugin.ajax_url,
+                headers: {
+                    // Workaround for sending POST data
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                params: mergeParams({
+                    action: 'save_consumer_keys'
+                }),
+                data: jQuery.param({
+                    consumerKey: key,
+                    consumerSecret: secret
+                })
+            });
+        }             
     }
 });

@@ -17,6 +17,8 @@ namespace YahooFantasySports;
  */
 class YahooFantasyShortcodeHandler {
     
+    protected $plugin;
+    
     /**
      * Define the core functionality of the plugin.
      *
@@ -29,10 +31,8 @@ class YahooFantasyShortcodeHandler {
      *
      * @since    1.0.0
      */
-    public function __construct($plugin, $version, $admin) {             
-        $this->pluginName = $plugin;
-        $this->version = $version;
-        $this->isAdmin = $admin;
+    public function __construct($plugin) {             
+        $this->plugin = $plugin;
         //$this->init();
     }    
     

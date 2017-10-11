@@ -2,9 +2,18 @@
 .text-error { color: red; }
 .text-success { color: green; }
 
+/** Image Styles */
+.yahoo-fantasy-plugin img { width: 100%; height: auto; max-width: fit-content; border-radius: 10px; }
+
+/** Table Styles */
+.yahoo-fantasy-plugin table { width: 100%; }
+.yahoo-fantasy-plugin table thead td { font-weight: bold; border-bottom: 1px solid black; }
+
 /** Administration Keys */
-yahoo-fantasy-admin-keys { display: block; width: 95%; }
-yahoo-fantasy-admin-keys label.strong { font-weight: bold; }
-yahoo-fantasy-admin-keys input[type="text"] { display: block; width: 100%; }
-yahoo-fantasy-admin-keys textarea { display: block; width: 100%; }
+.yahoo-fantasy-plugin { display: block; width: 95%; }
+.yahoo-fantasy-plugin label { font-weight: bold; }
+.yahoo-fantasy-plugin input[type="text"],
+.yahoo-fantasy-plugin textarea,
+.yahoo-fantasy-plugin select { display: block; width: 100%; }
+.yahoo-fantasy-plugin .subscript {display: block; font-style: italic; }
 

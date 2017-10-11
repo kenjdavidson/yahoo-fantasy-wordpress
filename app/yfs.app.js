@@ -28,6 +28,7 @@
 
 define([
     'angular',
+    'toastr',
     'services/includes',
     'directives/includes'
 ], function(angular){

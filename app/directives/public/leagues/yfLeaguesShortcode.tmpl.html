@@ -1,0 +1,21 @@
+<div id="leagues-for-user-{{vm.userId}}" class="yahoo-leagues">
+    <div ng-transclude></div>
+    <table>
+        <thead>
+            <td>Game</td>
+            <td>League Name</td>
+            <td>Season</td>
+            <td>League Key</td>
+            <td>Scoring</td>
+        </thead>
+        <tbody>
+            <tr ng-repeat="league in vm.leagues">
+                <td>{{league.game_code | uppercase}}</td>
+                <td>{{league.name}}</td>                
+                <td>{{league.season}}</td>
+                <td>{{league.league_key}}</td>
+                <td>{{league.scoring_type}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -2,8 +2,6 @@
 
 namespace YahooFantasySports;
 
-use Exception;
-
 /**
  * Handles the creation of menus and and other specific Administration
  * features required by the plugin.
@@ -12,16 +10,18 @@ use Exception;
  */
 class YahooFantasyAdmin {
     
+    /* @var $plugin YahooFantasy */
+    private $plugin;
+    
     /**
      * Constructor
      * @param string $plugin
      * @param string $version
      */
-    public function __construct($plugin, $version) {
-        $this->pluginName = $plugin;
-        $this->version = $version;
+    public function __construct($plugin) {
+        $this->plugin = $plugin;
         $this->init();
-    }
+    }  
     
     /**
      * Initialized the Yahoo_Fantasy Object by setting the appropriate 
@@ -39,88 +39,37 @@ class YahooFantasyAdmin {
         add_action('admin_enqueue_styles', array(&$this,'enqueueStyles'));
         add_action('admin_enqueue_scripts', array(&$this,'enqueueScripts'));
         add_action('admin_menu', array(&$this, 'addMenu'));
-        
-        // Setup AJAX requests
-        add_action('wp_ajax_get_consumer_keys', array(&$this, 'getConsumerKeys'));
-        add_action('wp_ajax_save_consumer_keys', array(&$this, 'saveConsumerKeys'));
-    }
-    
-    /**
-     * Performs security checking of the Ajax request based on the Nonce for
-     * the YahooFantasy plugin, as well as the allowed permissions.
-     * @param type $allowed
-     */
-    public function checkSecurity($allowed) {        
-        if ( !check_ajax_referer( YahooFantasy::NONCE_ACTION, 'security' ) ) {
-            throw new Exception(
-                    __('Max time exceeded on Ajax requests.  Please refresh the page and try again.', 'yahoo-fantasy'));
+             
+        // Handle OAuth return code if available
+        if (filter_input(INPUT_GET, 'code')) {
+            add_action( 'init', array(&$this, 'handleRedirectAuth'));
         }
-        
-        
-        
-        if ( !current_user_can( $allowed ) ) {
-            throw new Exception(
-                    __('User does not have the permissions required to access this functionality.', 'yahoo-fantasy'));
-        }
-    }
+    }    
     
-    /**
-     * Handles requests for getting the OAuth keys from the Wordpress plugin
-     * options.  This is called by the get_keys Ajax call, but can be called
-     * from anywhere in the Plugin.   Like saving, only users with 
-     * 'manage_options' have access to get the Consumer keys
+   /**
+     * Handles the redirection request from the Yahoo! OAuth service.  This can happen
+     * with live pages where the authentication comes back as normal.  This 
+     * is required because the wp_get_current_user_id functions are now
+     * loaded.
      */
-    public function getConsumerKeys() {
+    public function handleRedirectAuth() {
+        $code = filter_input(INPUT_GET, 'code');
+
         try {
-            $this->checkSecurity('manage_options');
-            
-            $key = get_option('yf_consumer_key');
-            $secret = get_option('yf_consumer_secret');
-            
-            $response = array(
-                'consumerKey'       => $key,
-                'consumerSecret'    => $secret                
-            );
-            wp_send_json_success($response);
+            error_log('Attempting to request AccessToken with code ' . $code);
+
+            $provider = $this->plugin->getYahooProvider();
+            $token = $provider->getAccessToken('authorization_code', [
+                'code'  => $code
+            ]);
+
+            $encoded = json_encode($token);
+            error_log('Retrieved AccessToken: ' . $encoded);
+            $this->plugin->saveYahooOption('yf_access_token', $encoded, true);                
         } catch (Exception $ex) {
-            wp_send_json_error($ex->getMessage());
-        }      
-    }
-    
-    /**
-     * Handles requests for saving the OAuth keys to the Wordpress plugin 
-     * options.  This is called by the save_keys Ajax call.  Saving consumer
-     * keys is only allowed by users that have 'manage_options' permissions
-     * on the site.
-     */
-    public function saveConsumerKeys() {     
-        try {            
-            $this->checkSecurity('manage_options');
-            
-            $key = isset($_POST['consumerKey']) ? $_POST['consumerKey'] : '';
-            $secret = isset($_POST['consumerSecret']) ? $_POST['consumerSecret'] : '';
-            
-            error_log("Attempting to update Yahoo! consumer keys {$key} and {$secret}.");
-            
-            $saveKey = update_option('yf_consumer_key', $key);
-            if (!$saveKey && $key != get_option('yf_consumer_key')) {
-                throw new Exception('Could not save Yahoo! Consumer Key.  See Wordpress debug log for more information.');
-            }
-            
-            $saveKey = update_option('yf_consumer_secret', $secret);
-            if (!$saveKey && $secret != get_option('yf_consumer_secret')) {
-                throw new Exception('Could not save Yahoo! Consumer Secret.  See Wordpress debug log for more information.');
-            }            
-            
-            $response = array(
-                'consumerKey'       => $key,
-                'consumerSecret'    => $secret
-            );
-            wp_send_json_success($response);                        
-        } catch (Exception $ex) {         
-            wp_send_json_error($ex->getMessage());                               
+            error_log($ex->getMessage());
         } 
-    }
+    }    
     
     /**
      * Enqueue the scripts related to the plugin
@@ -169,7 +118,7 @@ class YahooFantasyAdmin {
         }
         
         echo '<div class="yahoo-fantasy-plugin">';
-        echo '  <yahoo-fantasy-admin-settings />';
+        echo '  <yf-user-account />';
         echo '</div>';       
     }
     
@@ -185,7 +134,7 @@ class YahooFantasyAdmin {
         }
         
         echo '<div class="yahoo-fantasy-plugin">';
-        echo '  <yahoo-fantasy-admin-keys />';    
+        echo '  <yf-oauth-admin />';    
         echo '</div>';
     }
 }

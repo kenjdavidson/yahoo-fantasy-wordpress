@@ -1,0 +1,37 @@
+<div>
+    <h2>{{vm.title}}</h2>
+    <p>
+        <label class="strong" for="resource-selector">Resource:</label>
+        <select ng-model="vm.selectedResource"
+                id="resource-selector"
+                name="resource-selector"
+                ng-options="item as item.label for item in vm.resourceList"> 
+        </select>
+    </p>
+    <p ng-hide="vm.selectedResource.value !== 'custom'">
+        <label class="strong" for="custom-resource">Custom Resource URL:</label>
+        <input id="custom-resource"
+               name="custom-resource"
+               ng-model="vm.customURL"
+               type="text"/>
+        <span class="subscript">
+            The custom resource URL can be provided (currently no error checking)
+            and should match a valid 
+            <a href="https://developer.yahoo.com/fantasysports/guide/" target="_blank">Yahoo! Fantasy API</a> 
+            endpoint. 
+        </span>
+    </p>
+    <p>
+        <label class="strong" for="season">Seasons:</label>
+        <input id="season" 
+               name="season"
+               ng-model="vm.seasons"
+               type="text"/>
+        <span class="subscript">
+           Seasons should be a comma separated list of years. 
+        </span>
+    </p>
+    <div id="shortcode-container">
+        
+    </div>
+</div>

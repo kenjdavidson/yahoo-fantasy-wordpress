@@ -1,0 +1,63 @@
+<div class="wrap container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <h2>Yahoo! Plugin Details</h2>
+            <p>
+                In order to use the Yahoo! Fantasy Plugin shortcodes throughout 
+                your posts and pages, you need to first login to Yahoo! and provide
+                your authorization for this application to access your Fantasy
+                details.  In order to complete the login, follow the link below. 
+                You'll be taken to the Yahoo! login page; provide your login 
+                details and click to continue.
+            </p>  
+            <h2>User Account</h2>
+            <div ng-hide="!vm.authorizationUrl">
+                <p>
+                    <a ng-href="{{vm.authorizationUrl}}" target="_blank">Login to Yahoo!</a>
+                <p>
+                <p>
+                    <label class="strong" for="code">Authorization Code:</label>
+                    <input id="authorizationCode"
+                           type="text"
+                           ng-model="vm.authorizationCode" />
+                </p>
+                <p>
+                    <input type="button" ng-click="vm.submit()" value="Save"/>
+                    <input type="button" ng-click="vm.cancel()" value="Cancel"/>
+                </p>
+            </div>
+            <div ng-hide="!vm.profile">
+                <p>
+                    You've successfully logged into Yahoo! Services.  Please confirm 
+                    your account information below.  If you want to remove the 
+                    Yahoo! Authorization, you can click the logout button.  Note - 
+                    logging out will cause all your pages and posts to stop
+                    displaying Yahoo! Fantasy details.
+                </p>
+                <yf-user-profile user="vm.profile"></yf-user-profile>                
+                <p>
+                    <input type="button" ng-click="vm.logout()" value="Logout"/>
+                </p>
+            </div>             
+        </div>
+        <div class="col-sm-12 col-lg-6">
+            <div ng-hide="vm.profile">
+                <h2>Sample Yahoo! Data</h2>
+                <p>
+                    After logging in, you'll be able to look at the standard Yahoo!
+                    JSON structure for some standard resources: teams, match-ups,
+                    and standings.
+                </p>
+            </div>
+            <div ng-hide="!vm.profile">
+                <h2>Yahoo! Shortcode Tester</h2>
+                <p>
+                    This standard JSON data is used when adding standard shortcodes
+                    to your posts and pages.  To setup custom requests with the 
+                    [yahoo-custom] shortcode, check the admin/customize page.
+                </p>
+                <yf-shortcode-tester></yf-shortcode-tester>
+            </div>
+        </div>    
+    </div>
+</div>

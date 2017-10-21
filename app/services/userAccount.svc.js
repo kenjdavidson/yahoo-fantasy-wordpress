@@ -8,26 +8,28 @@ define([
         YahooUserAccountFactory
     ]);
     
-    function YahooUserAccountFactory($wp){
+    function YahooUserAccountFactory($api){
         var user = {};
         
         user.profile = undefined;
         user.authorizationUrl = undefined;
         
         user.authorizeUser = function(code) {
-            return $wp.post('yf_request_auth', {authCode: code})
+            return $api.post('yf_request_auth', {authCode: code})
                     .then(function(resp){
-                        console.log('YahooUserAccountFactory#authorizeUser' + resp);
+                        console.log('YahooUserAccountFactory.authorizeUser response: ' + resp);
                         var data = response.data;
                         if (data.success) {
-
+                            // Dont do anything currently
                         } 
+                        return user;
                     });            
         };
         
         user.getProfile = function() {
-            return $wp.get('yf_get_user_account')
-                    .then(function(resp){                        
+            return $api.get('yf_get_user_account')
+                    .then(function(resp){       
+                        console.log('YahooUserAccountFactory.getProfile response: ' + resp);
                         var data = resp.data;
                         if (!data.success && data.data.errorCode === 901) {
                             user.profile = undefined;
@@ -36,12 +38,14 @@ define([
                             user.profile = data.data.account.profile;
                             user.authorizationUrl = undefined;
                         }
+                        return user;
                     });
         };
         
         user.logout = function() {
-            return $wp.get('yf_logout')
+            return $api.get('yf_logout')
                     .then(function(resp){
+                        console.log('YahooUserAccountFactory.logout response: ' + resp);
                         var data = resp.data;
                         if (data.succcess) return true;
                         return false;

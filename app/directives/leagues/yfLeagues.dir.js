@@ -3,7 +3,7 @@ define([
 ], function(directives){
     'use strict';
     
-    directives.directive('yfLeaguesShortcode',[
+    directives.directive('yfLeagues',[
         'WordpressFactory',
         'YahooFantasyFactory',
         LeaguesShortcode
@@ -11,11 +11,14 @@ define([
     
     function LeaguesShortcode($wp, $yf) {
         var ddo = {
-            templateUrl: $wp.getTemplate('/public/leagues/yfLeaguesShortcode.tmpl.html'),
+            templateUrl: $wp.getTemplate('/leagues/yfLeagues.tmpl.html'),
             restrict: 'EA',
             replace: false,
             transclude: true,
-            scope: {},
+            scope: {
+                userId: '=',
+                seasons: '='
+            },
             bindToController: true,
             controllerAs: 'vm',
             controller: leaguesShortcodeController,
@@ -25,9 +28,12 @@ define([
         
         function leaguesShortcodeLink($scope, $element, $attrs) {
             var vm = $scope.vm;
-            vm.userId = $attrs.userId;
-            vm.seasons = $attrs.seasons;
             vm.refresh();
+            
+            $scope.$on('shortcode.refresh.seasons', function(event, seasons){
+                vm.seasons = seasons;
+                vm.refresh();
+            });
         }
         
         function leaguesShortcodeController(){

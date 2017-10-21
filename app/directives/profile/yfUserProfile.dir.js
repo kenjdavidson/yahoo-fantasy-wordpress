@@ -9,7 +9,7 @@ define([
     
     function UserProfileDirective($wp) {
         var ddo = {
-            templateUrl: $wp.getTemplate('/public/profile/yfUserProfile.tmpl.html'),
+            templateUrl: $wp.getTemplate('/profile/yfUserProfile.tmpl.html'),
             restrict: 'EA',
             replace: false,
             transclude: false,

@@ -8,7 +8,7 @@ define([
         YahooOAuthFactory
     ]);
     
-    function YahooOAuthFactory($wp){        
+    function YahooOAuthFactory($api){        
         var oauth = {}
         oauth.config = {
             clientId: undefined,
@@ -17,10 +17,10 @@ define([
         };
 
         oauth.getConfig = function(){
-            return $wp
+            return $api
                     .get('yf_get_consumer_keys')
                     .then(function(resp){
-                        console.log('YahooOAuthFactory#getConfig: ' + resp);
+                        console.log('YahooOAuthFactory.getConfig response: ' + resp);
                         var data = resp.data;
                         if (data.success) {
                             oauth.config.clientId = data.data.consumerKey;
@@ -32,14 +32,14 @@ define([
         };
         
         oauth.saveConfig = function(config) {           
-            return $wp
+            return $api
                     .post('yf_save_consumer_keys', {
                         consumerKey: config.clientId,
                         consumerSecret: config.clientSecret,
                         redirectOob: config.redirectOob
                     })
                     .then(function(resp){
-                        console.log('YahooOAuthFactory#saveConfig: ' + resp);
+                        console.log('YahooOAuthFactory.saveConfig response: ' + resp);
                         oauth.config = config;
                     });
         };

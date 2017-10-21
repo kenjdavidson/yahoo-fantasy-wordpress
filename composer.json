@@ -15,6 +15,6 @@
     ],
     "require": {
         "composer/installers": "v1.4.0",
-        "kenjdavidson/oauth-yahoofantasysports": "0.1.0"
+        "kenjdavidson/oauth-yahoofantasysports": "dev-master"
     }
 }

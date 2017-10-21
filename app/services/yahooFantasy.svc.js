@@ -9,7 +9,7 @@ define([
         YahooFantasyFactory
     ]);
     
-    function YahooFantasyFactory($wp, $f) {
+    function YahooFantasyFactory($api, $f) {
         
         var defaults = {
             userId: 0,
@@ -20,13 +20,16 @@ define([
         
         function doGet(action, type, params) {
             var merged = angular.extend(defaults, params);
-            return $wp.get(action, merged)
+            return $api.get(action, merged)
                     .then(function(resp){
                         var data = resp.data;
                         if (data.success) {
                             fantasy[type] = data.data[type];
-                            return fantasy[type];
+                        } else {
+                            fantasy[type] = {};
                         }
+                        
+                        return fantasy[type];
                     });
         }
         
@@ -36,8 +39,13 @@ define([
         
         fantasy.getLeagues = function(params) {
             return doGet('yf_get_user_leagues', 'leagues', params);
+        };
+        
+        fantasy.getTeams = function(params) {
+            return doGet('yf_get_user_teams', 'teams', params);
         }
         
         return fantasy;
     }
+    
 });

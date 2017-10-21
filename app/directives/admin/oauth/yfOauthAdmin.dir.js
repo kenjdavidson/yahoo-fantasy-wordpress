@@ -11,7 +11,7 @@ define([
    
     function YahooOAuthAdmin($wp, $oauth) {
         var ddo = {
-            templateUrl: $wp.getTemplate('/admin/keys/yfAdminKeys.tmpl.html'),
+            templateUrl: $wp.getTemplate('/admin/oauth/yfOauthAdmin.tmpl.html'),
             restrict: 'EA',
             replace: false,
             transclude: true,

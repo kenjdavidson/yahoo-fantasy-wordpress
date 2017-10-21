@@ -17,3 +17,30 @@
 .yahoo-fantasy-plugin select { display: block; width: 100%; }
 .yahoo-fantasy-plugin .subscript {display: block; font-style: italic; }
 
+/** Global Styles */
+.yahoo-league,
+.yahoo-team,
+div[yf-accordion],
+div[yf-accordion-content] {
+    clear: both;
+}
+
+/** Yahoo Standing Styles **/
+.yahoo-standings div[yf-accordion] div[yf-accordion-title]:before { display: inline-block; content: "+"; width: 16px; text-align: left }
+.yahoo-standings div[yf-accordion].openned div[yf-accordion-title]:before { content: "-"; }
+.yahoo-standings div[yf-accordion] div[yf-accordion-content] { padding-bottom: 16px; overflow: hidden; -webkit-transition: max-height 0.5s ease-in-out; -moz-transition: max-height 0.5s ease-in-out; -o-transition: max-height 0.5s ease-in-out; transition: max-height 0.5s ease-in-out; }
+
+/** Yahoo Teams Styles */
+.team-image { float:left; margin-right: 16px; }
+.image-size-large { width:64px; }
+.image-size-medium { width: 56px; }
+.image-size-small { width: 48px; }
+.team-name { font-size: 1.3em; font-weight: bold; line-height: 1.5em; }
+.team-standings span { display: block; }
+.team-standings span.place { font-size: 1.1em; text-transform: uppercase; }
+.team-standings span.record { font-size: 1.1em; }
+
+/** Player Styles */
+.yf-player-card { display: inline-block; position: relative; text-align: center; margin: 16px; }
+.yf-player-card .player-info span { display: block; }
+.yf-player-card .player-name { font-weight: bold; }

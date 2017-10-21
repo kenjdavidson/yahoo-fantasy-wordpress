@@ -56,6 +56,8 @@ define([
          * @returns Promise
          */
         function doPost(action, data) {
+            console.log('WordpressFactory attempting POST request: ' + action);
+            console.log('Using request data: ' + JSON.stringify(data));
             return $http({
                     method: 'POST',
                     url: wp_yahoo_fantasy_plugin.ajax_url,
@@ -70,7 +72,12 @@ define([
                 }).then(function(resp){
                     return resp;
                 }, function(fail){
-                    console.log('Wordpress AJAX Error: ' + fail);
+                    console.log('Wordpress AJAX Error: ' + JSON.stringify(fail));
+                    return {
+                        data: {
+                            success:false
+                        }
+                    };
                 });           
         }
         
@@ -81,6 +88,8 @@ define([
          * @returns Promise
          */
         function doGet(action, params) {
+            console.log('WordpressFactory attempting GET request: ' + action);
+            console.log('Using request params: ' + JSON.stringify(params));            
             return $http({
                     method: 'GET',
                     url: wp_yahoo_fantasy_plugin.ajax_url,
@@ -90,7 +99,12 @@ define([
                 }).then(function(resp){
                     return resp;
                 }, function(fail){
-                    console.log('Wordpress AJAX Error: ' + fail);
+                    console.log('Wordpress AJAX Error: ' + JSON.stringify(fail));
+                    return {
+                        data: {
+                            success:false
+                        }
+                    };
                 });             
         }        
     }

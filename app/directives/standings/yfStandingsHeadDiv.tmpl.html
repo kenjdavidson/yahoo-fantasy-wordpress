@@ -1,0 +1,24 @@
+<table class="head-to-head-division-standings">
+    <thead>
+        <tr>  
+            <td class="standings-rank">Rank</td>
+            <td class="standings-team-name">Team Name</td>
+            <td class="standings-record">W-L-T</td>
+            <td class="standings-division">Division</td>
+            <td class="standings-pts-for">Pts For</td>
+            <td class="standings-pts-against">Pts Against</td>
+            <td class="standings-streak">Streak</td>            
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="team in league.standings">  
+            <td class="standings-rank">{{team.team_standings.rank}}</td>
+            <td class="standings-team-name">{{team.name}}</td>
+            <td class="standings-record">{{vm.getOutcomeTotals(team.team_standings.outcome_totals)}}</td>
+            <td class="standings-division">{{vm.getOutcomeTotals(team.team_standings.divisional_outcome_totals)}}</td>
+            <td class="standings-pts-for">{{team.team_standings.points_for}}</td>
+            <td class="standings-pts-against">{{team.team_standings.points_against}}</td>
+            <td class="standings-streak">{{vm.getStreak(team.team_standings.streak)}}</td>
+        </tr>
+    </tbody>                    
+</table>  

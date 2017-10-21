@@ -208,7 +208,7 @@ class YahooFantasy {
         $tokenString = get_user_option('yf_access_token');            
         if (!$tokenString) {
             error_log('Invalid AccessToken, providing authorization url: ' . $provider->getAuthorizationUrl());
-            throw new Exception($provider->getAuthorizationUrl(), 901);
+            return false;
         }      
         
         // Since we are here, we should actually have the login working

@@ -1,6 +1,8 @@
 <?php
 namespace YahooFantasySports;
 
+use \Exception;
+
 /**
  * YahooFantasyRESTHandler
  * 
@@ -55,16 +57,20 @@ class YahooFantasyRestHandler {
         if ($this->plugin->isAdmin()) {
             // Setup AJAX requests
             add_action('wp_ajax_yf_get_consumer_keys', array(&$this, 'handleAdminAjax'));
-            add_action('wp_ajax_yf_save_consumer_keys', array(&$this, 'handleAdminAjax'));
-            add_action('wp_ajax_yf_get_user_account', array(&$this, 'handleAdminAjax'));
+            add_action('wp_ajax_yf_save_consumer_keys', array(&$this, 'handleAdminAjax'));           
             add_action('wp_ajax_yf_request_auth', array(&$this, 'handleAdminAjax'));
             add_action('wp_ajax_yf_logout', array(&$this, 'handleAdminAjax'));
+            
+            add_action('wp_ajax_yf_get_user_account', array(&$this, 'handleAjaxNopriv'));
             add_action('wp_ajax_yf_get_user_games', array(&$this, 'handleAjaxNopriv'));
             add_action('wp_ajax_yf_get_user_leagues', array(&$this, 'handleAjaxNopriv'));
+            add_action('wp_ajax_yf_get_user_teams', array(&$this, 'handleAjaxNopriv'));
         }
         
+        add_action('wp_ajax_nopriv_yf_get_user_account', array(&$this, 'handleAjaxNopriv'));
         add_action('wp_ajax_nopriv_yf_get_user_games', array(&$this, 'handleAjaxNopriv'));
         add_action('wp_ajax_nopriv_yf_get_user_leagues', array(&$this, 'handleAjaxNopriv'));
+        add_action('wp_ajax_nopriv_yf_get_user_teams', array(&$this, 'handleAjaxNopriv'));
     }    
     
     /**
@@ -77,11 +83,24 @@ class YahooFantasyRestHandler {
         try {            
             $this->checkSecurity(YahooFantasyRestHandler::ACTION_SECURITY[$action]); 
             
-            // Determine the callable
-            // The callable is created by converting the action to camel case
-            // yf_get_consumer_keys -> getConsumerKeys
+            /* @var $provider YahooFantasyProvider */
+            $provider = $this->plugin->getYahooProvider();  
+
+            /* @var $service YahooFantasyService */
+            $service = $this->plugin->getYahooService($provider, $userId); 
+            
+            if (!$service) {
+                wp_send_json_error(array(
+                    'errorType'     => 'Exception',
+                    'errorCode'     => $provider->getAuthorizationUrl(),
+                    'errorMessage'  => 901
+                ));                             
+            }
+            
             $callable = YahooFantasyRestHandler::callableFromAction($action);
-            call_user_func(array($this, $callable));            
+            $response = call_user_func_array(array($this, $callable));  
+            wp_send_json_success($response);    
+
         } catch (Exception $ex) {
             error_log("Action {$action} threw an exception: " . $ex->getMessage());
             
@@ -102,26 +121,37 @@ class YahooFantasyRestHandler {
     public function handleAjaxNopriv() {
         $action = filter_input(INPUT_GET, 'action');
         $userId = filter_input(INPUT_GET, 'userId');
-        $seasons = filter_input(INPUT_GET, 'seasons')
-                ? filter_input(INPUT_GET, 'seasons')
-                : date('Y');
+        $params = $this->filterParams();
         
-        error_log("Attempting No Privs {$action} for user {$userId} on seasons {$seasons}.");
+        if (is_admin()) {
+            $userId = get_current_user_id();
+        }                
         
-        try {                           
-            $this->checkSecurity(null); 
-            
-            // Check the userId
+        try {                                       
             if (!$userId) {
                 throw new Exception(__('UserId is required in order to lookup Yahoo! Resources.', 'yahoo-fantasy'), 902);
-            }           
+            }   
             
-            // Determine the callable
-            // The callable is created by converting the action to camel case
-            // yf_get_consumer_keys -> getConsumerKeys
-            $callable = YahooFantasyRestHandler::callableFromAction($action);            
-            $args = array($userId, $seasons);
-            call_user_func_array(array($this, $callable), $args);            
+            $this->checkSecurity(null);               
+            
+            /* @var $provider YahooFantasyProvider */
+            $provider = $this->plugin->getYahooProvider();  
+
+            /* @var $service YahooFantasyService */
+            $service = $this->plugin->getYahooService($provider, $userId); 
+            
+            if (!$service && $provider) {
+                throw new Exception($provider->getAuthorizationUrl(), 901);
+            } else if (!$service) {
+                throw new Exception(__('Unable to access Yahoo! services for this user.', 'yahoo-fantasy'));
+            }
+            
+            $callable = YahooFantasyRestHandler::callableFromAction($action);
+            error_log("Action {$action} making request to {$callable}");
+            $response = call_user_func_array(array($this, $callable), 
+                    array($service, $userId, $params));  
+            wp_send_json_success($response);             
+                        
         } catch (Exception $ex) {
             error_log("Action {$action} threw an exception: " . $ex->getMessage());
             
@@ -131,6 +161,17 @@ class YahooFantasyRestHandler {
                 'errorMessage'  => $ex->getMessage()
             )); 
         }        
+    }
+    
+    /**
+     * Method to return consistent GET paramters for looking up user data
+     * @return Array
+     */
+    private function filterParams() {
+        return array(
+            'seasons'   => filter_input(INPUT_GET, 'seasons') ? filter_input(INPUT_GET, 'seasons') : date('Y'),
+            'key'       => filter_input(INPUT_GET, 'key') ? filter_intput(INPUT_GET, 'key') : null
+        );
     }
     
     /**
@@ -165,43 +206,63 @@ class YahooFantasyRestHandler {
     }
     
     /**
-     * Handles the request to retrieve the User Games.  This this call requires
-     * the INPUT_GET values: 
-     * - seasons
-     * - userId
+     * Handles the request to retrieve the User Games.
+     * @param YahooFantasyService $service
+     * @param int $userId
+     * @param Array $params
+     * @return mixed array or Exception based on service response
      */
-    public function getUserGames($userId, $seasons) {
-        /* @var $provider YahooFantasyProvider */
-        $provider = $this->plugin->getYahooProvider();  
+    public function getUserGames($service, $userId, $params) {
+        try {
+            $games = $service->getUserGames($params['seasons']);
+            error_log("Found games for {$userId}: " . print_r($games, true));
 
-        /* @var $service YahooFantasyService */
-        $service = $this->plugin->getYahooService($provider, $userId); 
-        $games = $service->getUserGames();
-        
-        error_log("Found games for {$userId}: " . print_r($games, true));
-        
-        wp_send_json_success(array(
-            'games'      => $games
-        ));
+            return array(
+                'games'      => $games
+            );            
+        } catch (Exception $ex) {
+            return $ex;
+        }
     }
 
     /**
      * Handles the request for leagues
-     * TODO: merge this into something more abstract with getUserXXX
+     * @param YahooFantasyService $service
+     * @param int $userId
+     * @param Array $params
+     * @return mixed array or Exception based on service response
      */
-    public function getUserLeagues($userId, $seasons) {
-        /* @var $provider YahooFantasyProvider */
-        $provider = $this->plugin->getYahooProvider();  
+    public function getUserLeagues($service, $userId, $params) {
+        try {
+            $leagues = $service->getUserLeagues($params['seasons']);
+            error_log("Found leagues for {$userId}: " . print_r($leagues, true));
 
-        /* @var $service YahooFantasyService */
-        $service = $this->plugin->getYahooService($provider, $userId); 
-        $leagues = $service->getUserLeagues($seasons);
-        
-        error_log("Found leagues for {$userId}: " . print_r($leagues, true));
-        
-        wp_send_json_success(array(
-            'leagues'      => $leagues
-        ));        
+            return array(
+                'leagues'      => $leagues
+            );             
+        } catch (Exception $ex) {
+            return $ex;
+        }       
+    }
+    
+    /**
+     * 
+     * @param type $service
+     * @param type $userId
+     * @param type $params
+     * @return mixed array or Exception based on service response
+     */
+    public function getUserTeams($service, $userId, $params) {
+        try {
+            $teams = $service->getUserTeams($params['seasons']);
+            error_log("Found leagues for {$userId}: " . print_r($teams, true));
+
+            return array(
+                'teams'      => $teams
+            );             
+        } catch (Exception $ex) {
+            return $ex;
+        }           
     }
     
     /**
@@ -228,18 +289,20 @@ class YahooFantasyRestHandler {
      *   this case the error JSON is returned.
      * 
      * This function requires the 'publish_posts' security.
+     * 
+     * @param YahooFantasyService $service
      */
-    public function getUserAccount() {
-        /* @var $provider YahooFantasyProvider */
-        $provider = $this->plugin->getYahooProvider();  
-        $authUrl = $provider->getAuthorizationUrl();
-
-        /* @var $service YahooFantasyService */
-        $service = $this->plugin->getYahooService($provider);
-
-        wp_send_json_success(array(
-            'account'      => $service->getUserAccount()
-        ));
+    public function getUserAccount($service) {
+        try {                   
+            $account = $service->getUSerAccount();
+            error_log("Found user account for service" . print_r($account, true));
+            
+            return array(
+                'account'      => $account
+            );            
+        } catch (Exception $ex) {
+            return $ex;
+        }
     }
     
     /**
@@ -249,14 +312,18 @@ class YahooFantasyRestHandler {
      * 'manage_options' have access to get the Consumer keys
      */
     public function getConsumerKeys() {
-        $this->checkSecurity('manage_options');
-        $keys = $this->plugin->getConsumerKeys();
+        try {
+            $this->checkSecurity('manage_options');
+            $keys = $this->plugin->getConsumerKeys();
 
-        wp_send_json_success(array(
-            'consumerKey'       => $keys['clientId'],
-            'consumerSecret'    => $keys['clientSecret'],
-            'redirectUri'       => $keys['redirectUri']
-        ));     
+            return array(
+                'consumerKey'       => $keys['clientId'],
+                'consumerSecret'    => $keys['clientSecret'],
+                'redirectUri'       => $keys['redirectUri']
+            );            
+        } catch (Exception $ex) {
+            return $ex;
+        }     
     }
      
     /**
@@ -265,25 +332,29 @@ class YahooFantasyRestHandler {
      * keys is only allowed by users that have 'manage_options' permissions
      * on the site.
      */
-    public function saveConsumerKeys() {     
-        $key = filter_input(INPUT_POST, 'consumerKey');
-        $secret = filter_input(INPUT_POST, 'consumerSecret');
+    public function saveConsumerKeys() { 
+        try {
+            $key = filter_input(INPUT_POST, 'consumerKey');
+            $secret = filter_input(INPUT_POST, 'consumerSecret');
 
-        $redirect = filter_input(INPUT_POST, 'redirectOob');            
-        $redirectUrl = ("false" != $redirect) 
-                ? 'oob' : get_site_url(null, '/wp-admin/admin.php?page=yahoo_fantasy_keys');
+            $redirect = filter_input(INPUT_POST, 'redirectOob');            
+            $redirectUrl = ("false" != $redirect) 
+                    ? 'oob' : get_site_url(null, '/wp-admin/admin.php?page=yahoo_fantasy_keys');
 
-        error_log("Attempting to update Yahoo! consumer keys {$key}, {$secret}, {$redirectUrl}.");
+            error_log("Attempting to update Yahoo! consumer keys {$key}, {$secret}, {$redirectUrl}.");
 
-        $this->plugin->saveYahooOption('yf_consumer_key', $key);
-        $this->plugin->saveYahooOption('yf_consumer_secret', $secret);
-        $this->plugin->saveYahooOption('yf_redirect_url', $redirectUrl);
+            $this->plugin->saveYahooOption('yf_consumer_key', $key);
+            $this->plugin->saveYahooOption('yf_consumer_secret', $secret);
+            $this->plugin->saveYahooOption('yf_redirect_url', $redirectUrl);
 
-        wp_send_json_success(array(
-            'consumerKey'       => $key,
-            'consumerSecret'    => $secret,
-            'redirectUrl'       => $redirect
-        ));                        
+            return array(
+                'consumerKey'       => $key,
+                'consumerSecret'    => $secret,
+                'redirectUrl'       => $redirect
+            );             
+        } catch (Exception $ex) {
+            return $ex;
+        }                               
     }
     
     /**
@@ -292,20 +363,24 @@ class YahooFantasyRestHandler {
      * options as a JSON String, if not an exception is thrown.
      */
     public function requestAuth() {
-        $code = filter_input(INPUT_POST, 'authCode');
+        try {
+            $code = filter_input(INPUT_POST, 'authCode');
 
-        error_log('Attempting to request AccessToken with code ' . $code);
+            error_log('Attempting to request AccessToken with code ' . $code);
 
-        $provider = $this->plugin->getYahooProvider();
-        $token = $provider->getAccessToken('authorization_code', [
-            'code'  => $code
-        ]);
+            $provider = $this->plugin->getYahooProvider();
+            $token = $provider->getAccessToken('authorization_code', [
+                'code'  => $code
+            ]);
 
-        error_log('Retrieved AccessToken: ' . json_encode($token));
+            error_log('Retrieved AccessToken: ' . json_encode($token));
 
-        $this->plugin->saveYahooOption('yf_access_token', 
-                json_encode($token), true);
+            $this->plugin->saveYahooOption('yf_access_token', 
+                    json_encode($token), true);
 
-        wp_send_json_success();
+            return array();            
+        } catch (Exception $ex) {
+            return $ex;
+        }
     }    
 }

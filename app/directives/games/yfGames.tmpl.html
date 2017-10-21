@@ -5,14 +5,14 @@
             <td>Name</td>
             <td>Game Key</td>
             <td>Season</td>            
-            <td>Finished</td>
+            <td>Active</td>
         </thead>
         <tbody>
             <tr ng-repeat="game in vm.games">
                 <td>{{game.name}}</td>
                 <td>{{game.game_key}}</td>                
                 <td>{{game.season}}</td>
-                <td>{{game.is_game_over}}</td>
+                <td>{{game.is_game_over == 1 ? "No" : "Yes"}}</td>
             </tr>
         </tbody>
     </table>

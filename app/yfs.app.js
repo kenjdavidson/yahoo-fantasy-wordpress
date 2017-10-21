@@ -35,7 +35,7 @@ define([
    'use strict';
    
    return angular.module('yfs.app', [
-       'yfs.services',
-       'yfs.directives'
-   ]);
+                'yfs.services',
+                'yfs.directives'
+            ]);
 });

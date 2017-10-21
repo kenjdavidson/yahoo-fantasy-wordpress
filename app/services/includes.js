@@ -1,5 +1,5 @@
 define([
-   'services/wordpress.svc',
+   'services/api/wordpress.svc',
    'services/userAccount.svc',
    'services/yahooOAuth.svc',
    'services/yahooFantasy.svc'   

@@ -25,7 +25,7 @@ define([
     }
     
     function teamStandingsDirectiveLink($scope, $element, $attrs) {
-        $scope.place = ordinalize($scope.standings.rank) + " place";
+        $scope.place = $scope.standings ? ordinalize($scope.standings.rank) + " place" : undefined;
         if ("head" === $scope.scoringType) {
             var outcome = $scope.standings.outcome_totals;
             $scope.record = [outcome.wins, outcome.losses, outcome.ties].join('-');

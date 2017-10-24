@@ -4,20 +4,23 @@ define([
     'use strict';
     
     const RESOURCE_LIST = [{
-                label: 'Games',
+                label: 'Games List',
                 value: 'games'
             },{
-                label: 'Leagues',
+                label: 'Leagues List',
                 value: 'leagues'                    
             }, {
-                label: 'Standings',
+                label: 'Team Standings',
                 value: 'standings'                    
-            },{
-                label: 'Scoreboard',
-                value: 'scoreboard'                    
             }, {
-                label: 'Teams/Roster',
+                label: 'Team Matchups',
+                value: 'team-matchups'                    
+            }, {
+                label: 'Team Rosters',
                 value: 'teams'                   
+            }, {
+                label: 'League Scoreboard',
+                value: 'league-scoreboard'                    
             }, {
                 label: 'Custom',
                 value: 'custom'

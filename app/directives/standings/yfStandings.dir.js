@@ -29,7 +29,8 @@ define([
         
         function standingsShortcodeLink($scope, $element, $attrs) {
             var vm = $scope.vm;
-            vm.refresh();
+            
+            if (!vm.leagues) vm.refresh();
             
             $scope.$on('shortcode.refresh.seasons', function(event, seasons){
                 vm.seasons = seasons;

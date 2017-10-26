@@ -4,9 +4,9 @@
 
 /** Image Styles */
 .yahoo-fantasy-plugin img { width: 100%; height: auto; max-width: fit-content; border-radius: 10px; }
-.image-size-large { width:64px; }
-.image-size-medium { width: 56px; }
-.image-size-small { width: 48px; }
+.yahoo-fantasy-plugin div.image-size-large { width:56px; }
+.yahoo-fantasy-plugin div.image-size-medium { width: 48px; }
+.yahoo-fantasy-plugin div.image-size-small { width: 24px; }
 
 /** Table Styles */
 .yahoo-fantasy-plugin table { width: 100%; }
@@ -56,6 +56,10 @@ yf-team-details .team-standings span.place { font-size: 1.1em; text-transform: u
 yf-team-details .team-standings span.record { font-size: 1.1em; }
 
 /** Player Styles */
-.yf-player-card { display: inline-block; position: relative; text-align: center; margin: 16px; }
-.yf-player-card .player-info span { display: block; }
-.yf-player-card .player-name { font-weight: bold; }
+.yf-player-card { margin: 16px; }
+.yf-player-card .player-image { display: inline-block; }
+.yf-player-card .player-info { display: inline-block; }
+.yf-player-card .player-info span { font-size: 1.2em; }
+.yf-player-card .player-name { font-weight: bold; font-size: 1.2em; }
+.yf-player-card .player-number { font-weight: bold; font-size: 1.2em; }
+div[yf-accordion-content].team-roster { height: 50vh; overflow: scroll;}

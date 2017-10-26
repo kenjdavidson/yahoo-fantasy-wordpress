@@ -10,12 +10,16 @@ define([
     
     function PlayerCardDirective($yf) {
         var ddo = {
-            template: '<div class="yf-player-card id-{{player.player_key}}">'                
-                + ' <div class="player-image"><img ng-src="{{player.headshot.url}}" class="image-size-{{player.headshot.size}}" /></div>'
-                + ' <div class="player-info">'
-                + '     <span class="player-name">{{player.name.full}}</span>'
-                + '     <span class="player-team-name">{{player.editorial_team_full_name}}</span>'
-                + ' </div>'
+            template: 
+                  '<div class="yf-player-card id-{{player.player_key}}">'                
+                + '  <div class="player-image image-size-{{player.headshot.size}}">'
+                + '    <img ng-src="{{player.headshot.url}}" />'
+                + '  </div>'
+                + '  <div class="player-info">'
+                + '     <span class="player-name">{{player.name.full}} (#{{player.uniform_number}})</span>'
+                + '     <span class="player-position">{{player.display_position}}</span>'
+                + '     <span class="player-team-name">{{player.editorial_team_full_name}}</span>'        
+                + '  </div>'
                 + '</div>',
             restrict: 'E',
             replace: true,

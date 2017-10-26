@@ -9,7 +9,7 @@ define([
     function TeamStandingsDirective() {
         var ddo = {
             template: 
-                  '<div ng-if="team.league_scoring_type === \'head\'" class="team-points">'
+                  '<div ng-if="team.league_scoring_type === \'head\' && team.team_points" class="team-points">'
                 + '  <span ng-if="team.team_points" class="current-points">{{team.team_points.total}}</span>'
                 + '  <span ng-if="team.team_projected_points" class="projected-points">{{team.team_projected_points.total}}</span>'
                 + '</div>'

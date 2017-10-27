@@ -4,11 +4,12 @@ define([
     'use strict';
     
     directives.directive('yfTeamMatchups', [
+        '$filter',
         'DirectiveFactory',
         TeamMatchupsDirective
     ]);
     
-    function TeamMatchupsDirective($df) {
+    function TeamMatchupsDirective($filter, $df) {
         var iScope = {
             userId: '=',
             seasons: '='
@@ -54,6 +55,20 @@ define([
                         return league.scoreboard[i];
                     }
                 }
+            };
+            
+            vm.getCurrentWeek = function(league){
+                if (league.scoring_type === 'roto') {
+                    return '(' + league.start_date + '-' + league.end_date + ')';
+                } else if (league.is_finished) {                    
+                    for (var i = 0; i < league.standings.length; i++) {
+                        if (league.standings[i].league_key === league.league_key) {
+                            return '(Finished ' + $filter('ordinalize')(league.standings[i].team_standings.rank) + ')';
+                        }
+                    }
+                } 
+                
+                return '(Week ' + league.current_week + ')';
             }
         }        
     }

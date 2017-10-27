@@ -24,7 +24,8 @@ requirejs.config({
         toastr: 'http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min',
         controllers: 'controllers',
         directives: 'directives',
-        services: 'services'
+        services: 'services',
+        extras: 'extras'
     },
     
     // Define non require javascript modules, including angular, ngResource, etc

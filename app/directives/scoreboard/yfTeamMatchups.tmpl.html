@@ -1,10 +1,10 @@
 <div class="yahoo-team-matchups user-matchups-{{vm.userId}}">
     <div ng-repeat="league in vm.leagues"
          class="yahoo-scoreboard league-scoreboard-{{league.league_key}}"
-         ng-class="{'league-finished':league.is_finished}">
+         ng-class="[league.scoring_type,{'league-finished':league.is_finished}]">
         <div class="matchup-title">
             <span class="league-name">{{league.name}}</span>
-            <span class="current-week">({{ league.is_finished === "1" ? 'Finished' : 'Week ' + league.current_week }})</span>
+            <span class="current-week">{{vm.getCurrentWeek(league)}}</span>
         </div>
         <yf-matchup matchup="vm.getUserScoreboard(league)" user-id="vm.userId"></yf-matchup>
     </div>

@@ -29,12 +29,14 @@
 define([
     'angular',
     'toastr',
+    'extras/includes',
     'services/includes',
-    'directives/includes'
+    'directives/includes',    
 ], function(angular){
    'use strict';
    
    return angular.module('yfs.app', [
+                'yfs.extras',
                 'yfs.services',
                 'yfs.directives'
             ]);

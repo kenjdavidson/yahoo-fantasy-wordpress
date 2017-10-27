@@ -38,7 +38,7 @@ div[yf-accordion-content] {
 .yahoo-scoreboard.league-finished { background: rgba(0,0,0,0.2); }
 .yahoo-scoreboard .matchup-title { text-align: center; padding: 4px; text-transform: uppercase; }
 .yahoo-scoreboard .team-matchups yf-team-details { float: left; display: inline-block; width: 50%; }
-.yahoo-scoreboard .team-matchups yf-team-details.roto { float: none; margin: auto; display: block; }
+.yahoo-scoreboard .team-matchups yf-team-details.roto { float: none; margin: 0px auto; display: block; width: initial; }
 
 
 /** Yahoo Teams Styles */

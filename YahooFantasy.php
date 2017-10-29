@@ -83,7 +83,7 @@ class YahooFantasy {
         add_action('wp_enqueue_scripts', array($this,'enqueueScripts'));
         
         if (is_admin()) {
-            add_action('admin_enqueue_scripts', array($this,'enqueueScripts'));
+            //add_action('admin_enqueue_scripts', array($this,'enqueueScripts'));
                         
             $this->isAdmin = true;           
             $this->admin = new \YahooFantasySports\YahooFantasyAdmin($this);
@@ -134,11 +134,15 @@ class YahooFantasy {
 
         wp_enqueue_script('require',
                 plugins_url('/app/require.js', __FILE__),
-                array('jquery'));         
+                array('jquery'),
+                '2.3.5',
+                true);         
         
         wp_enqueue_script('yfsbootstrap',
                 plugins_url('/app/yfs.boot.js', __FILE__),
-                array('require'));             
+                array('require'),
+                '1.0.0',
+                true);             
         
         wp_enqueue_style('flexboxgrid', 
                 plugins_url('/css/flexboxgrid.min.css', __FILE__),
@@ -205,7 +209,7 @@ class YahooFantasy {
      */
     public function getYahooService($provider, $user = null) {
         
-        $tokenString = get_user_option('yf_access_token');            
+        $tokenString = get_user_option('yf_access_token', $user);            
         if (!$tokenString) {
             error_log('Invalid AccessToken, providing authorization url: ' . $provider->getAuthorizationUrl());
             return false;

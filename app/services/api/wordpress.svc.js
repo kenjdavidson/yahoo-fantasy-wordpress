@@ -13,7 +13,8 @@ define([
             get: doGet,
             post: doPost,
             getTemplate: getTemplate,
-            getCurrentUserId: getCurrentUserId
+            getCurrentUserId: getCurrentUserId,
+            buildShortcode: buildShortcode
         };        
         
         /**
@@ -106,6 +107,23 @@ define([
                         }
                     };
                 });             
-        }        
+        }      
+        
+        /**
+         * Builds shortcode string from provided parameters
+         * @param {type} params
+         * @returns {undefined}
+         */
+        function buildShortcode(type, params) {           
+            var sc = '[yf-' + type;                                    
+            
+            angular.forEach(params, function(val,key){
+                sc += ' ' + key + '="' + val + '"'
+            });
+            
+            sc += ' /]';
+        
+            return sc;
+        }
     }
 });

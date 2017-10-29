@@ -3,7 +3,7 @@ define([
 ], function(directives){
     'use strict';
     
-    directives.directive('yfTeamMatchups', [
+    directives.directive('yfMatchups', [
         '$filter',
         'DirectiveFactory',
         TeamMatchupsDirective
@@ -15,7 +15,7 @@ define([
             seasons: '='
         };
         
-        var ddo = $df.build('/scoreboard/yfTeamMatchups.tmpl.html',
+        var ddo = $df.build('/scoreboard/yfMatchups.tmpl.html',
             iScope,
             teamMatchupsShortcodeController,
             teamMatchupsShortcodeLink

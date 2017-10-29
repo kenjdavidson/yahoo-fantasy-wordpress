@@ -15,7 +15,7 @@ define([
     
     'directives/scoreboard/yfMatchup.dir',
     'directives/scoreboard/yfScoreboard.dir',
-    'directives/scoreboard/yfTeamMatchups.dir',
+    'directives/scoreboard/yfMatchups.dir',
     
     'directives/profile/yfUserProfile.dir',
     

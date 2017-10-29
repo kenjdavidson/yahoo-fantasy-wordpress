@@ -87,6 +87,7 @@ class YahooFantasyRestHandler {
             $provider = $this->plugin->getYahooProvider();  
 
             /* @var $service YahooFantasyService */
+            $userId = get_current_user_id();
             $service = $this->plugin->getYahooService($provider, $userId); 
             
             if (!$service) {
@@ -98,7 +99,7 @@ class YahooFantasyRestHandler {
             }
             
             $callable = YahooFantasyRestHandler::callableFromAction($action);
-            $response = call_user_func_array(array($this, $callable));  
+            $response = call_user_func(array($this, $callable));  
             wp_send_json_success($response);    
 
         } catch (Exception $ex) {

@@ -1,6 +1,7 @@
 define([
+    'jquery',
     'directives/yfs.directives'
-], function(directives){
+], function($, directives){
     'use strict';
     
     directives.directive('yfAccordion', 

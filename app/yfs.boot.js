@@ -31,9 +31,6 @@ requirejs.config({
     // Define non require javascript modules, including angular, ngResource, etc
     // which are required.
     shim: {
-        'jquery': {
-            exports: 'jquery'
-        },
         'ngResource': {
             deps: ['angular'],
             exports: 'ngResource'            
@@ -47,10 +44,14 @@ requirejs.config({
     }
 });
 
+if (typeof jQuery === 'function') {
+  define('jquery', function () { return jQuery; });
+}
+
 // Bootstrap the yfsApp module to the <div class="yahoo-fantasy-plugin"></div> document
 // element.
 require(['yfs.app'],
     function() {
         angular.bootstrap(angular.element('.yahoo-fantasy-plugin'), ['yfs.app']);
     }
-);
+);    

@@ -2,7 +2,7 @@
     <div ng-repeat="league in vm.leagues"
          class="yahoo-scoreboard league-scoreboard-{{league.league_key}}"
          ng-class="[league.scoring_type,{'league-finished':league.is_finished}]">
-        <div class="matchup-title">
+        <div ng-if="!vm.hideMatchupTitle" class="matchup-title">
             <span class="league-name">{{league.name}}</span>
             <span class="current-week">{{vm.getCurrentWeek(league)}}</span>
         </div>

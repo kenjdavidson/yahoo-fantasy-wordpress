@@ -8,18 +8,12 @@
                 ng-options="item as item.label for item in vm.resourceList"> 
         </select>
     </p>
-    <p ng-hide="vm.selectedResource.value !== 'custom'">
-        <label class="strong" for="custom-resource">Custom Resource URL:</label>
-        <input id="custom-resource"
-               name="custom-resource"
-               ng-model="vm.customURL"
-               type="text"/>
-        <span class="subscript">
-            The custom resource URL can be provided (currently no error checking)
-            and should match a valid 
-            <a href="https://developer.yahoo.com/fantasysports/guide/" target="_blank">Yahoo! Fantasy API</a> 
-            endpoint. 
-        </span>
+    <p>
+        <label class="strong" for="shortcode-text">Short code:</label>
+        <input id="shortcode-test"
+               name="shortcode-test"
+               ng-model="vm.shortcode"
+               type="text" disabled />
     </p>
     <p>
         <label class="strong" for="season">Seasons:</label>

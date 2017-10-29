@@ -36,8 +36,7 @@ class YahooFantasyAdmin {
      *              - Customization allows for customized API calls
      */
     protected function init() {
-        add_action('admin_enqueue_styles', array(&$this,'enqueueStyles'));
-        add_action('admin_enqueue_scripts', array(&$this,'enqueueScripts'));
+        add_action('admin_enqueue_scripts', array(&$this->plugin,'enqueueScripts'));
         add_action('admin_menu', array(&$this, 'addMenu'));
              
         // Handle OAuth return code if available
@@ -112,7 +111,8 @@ class YahooFantasyAdmin {
      * 
      * This page can be seen by anyone that can publish_posts
      */
-    public function showSettingsPage() {
+    public function showSettingsPage() {        
+        
         if (!current_user_can('publish_posts')) {
             wp_die(__('Publish_Post user access is required in order to View this page.', 'yahoo-fantasy'));
         }
@@ -128,7 +128,8 @@ class YahooFantasyAdmin {
      * 
      * This page can only be seen by those that can manage_options
      */
-    public function showKeysPage() {
+    public function showKeysPage() {        
+        
         if (!current_user_can('manage_options')) {
             wp_die(__('Manage_Options user access is required in order to View this page.', 'yahoo-fantasy'));
         }

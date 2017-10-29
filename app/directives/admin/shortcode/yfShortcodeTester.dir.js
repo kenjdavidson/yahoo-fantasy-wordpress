@@ -1,29 +1,24 @@
 define([
+    'jquery',
     'directives/yfs.directives'
-], function(directives){
+], function($, directives){
     'use strict';
     
     const RESOURCE_LIST = [{
-                label: 'Games List',
+                label: 'Games',
                 value: 'games'
             },{
-                label: 'Leagues List',
+                label: 'Leagues',
                 value: 'leagues'                    
             }, {
-                label: 'Team Standings',
+                label: 'Standings',
                 value: 'standings'                    
             }, {
-                label: 'Team Matchups',
-                value: 'team-matchups'                    
+                label: 'Matchups',
+                value: 'matchups'                    
             }, {
-                label: 'Team Rosters',
+                label: 'Teams (w/ Rosters)',
                 value: 'teams'                   
-            }, {
-                label: 'League Scoreboard',
-                value: 'league-scoreboard'                    
-            }, {
-                label: 'Custom',
-                value: 'custom'
             }];
     
     directives.directive('yfShortcodeTester',[
@@ -58,17 +53,23 @@ define([
                     dirScope.$destroy();
                 }                
                 
-                var shortcode = '<yf-' + newSelected.value + '/>';
+                // Must be after to allow for compilation
+                vm.shortcode = $wp.buildShortcode(newSelected.value, {
+                    'wrap': 'div',
+                    'wrap-class': '',
+                    'seasons': vm.seasons,
+                    'user-id': $wp.getCurrentUserId()
+                });
+                
+                var shortcode = '<' + vm.shortcode.substring(1, vm.shortcode.length-1) + '>';
                 var $shortcode = $(shortcode)
-                        .attr({
-                            'seasons': 'vm.seasons',
-                            'user-id': $wp.getCurrentUserId()
-                        }).html('<h2>' + newSelected.label + '</h2>');
+                    .html('<h2>' + newSelected.label + '</h2>');                                             
                 
                 dirScope = $scope.$new(false, $scope);
                 $c($shortcode)(dirScope, function($ce, $s){
                     $wrapper.append($ce);
-                });
+                });     
+                
             });
             
             $scope.$watch('vm.seasons', function(newVal){
@@ -86,7 +87,7 @@ define([
             
             vm.onResourceChange = function(resource){
                 console.log(resource);
-            }
+            };
         }
     }
 });

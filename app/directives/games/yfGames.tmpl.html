@@ -1,0 +1,19 @@
+<div id="games-for-user-{{vm.userId}}" class="yahoo-games">
+    <div ng-transclude></div>
+    <table>
+        <thead>
+            <td>Name</td>
+            <td>Game Key</td>
+            <td>Season</td>            
+            <td>Active</td>
+        </thead>
+        <tbody>
+            <tr ng-repeat="game in vm.games">
+                <td>{{game.name}}</td>
+                <td>{{game.game_key}}</td>                
+                <td>{{game.season}}</td>
+                <td>{{game.is_game_over == 1 ? "No" : "Yes"}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

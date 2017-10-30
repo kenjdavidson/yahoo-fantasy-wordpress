@@ -1,0 +1,20 @@
+<div id="teams-{{vm.userId}}" 
+     yf-accordion
+     class="yahoo-teams">
+    <div ng-repeat="team in vm.teams"
+         yf-accordion-item
+         class="yahoo-team">
+
+        <div yf-accordion-title
+             class="team-info-{{team.team_key}}"
+             id="{{team.team_key}}}">
+            <yf-team-details team="team"></yf-team-details>
+        </div>
+        
+        <div yf-accordion-content
+             class="team-roster">
+            <yf-player-card ng-repeat="player in team.roster.players"
+                            player="player"/>
+        </div>
+    </div>
+</div>

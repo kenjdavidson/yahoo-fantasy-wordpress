@@ -1,0 +1,20 @@
+<table class="roto-standings">
+    <thead>
+        <tr>  
+            <td>Rank</td>
+            <td>Team Name</td>
+            <td>Pts For</td>
+            <td>Pts Change</td>
+            <td>Pts Back</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="team in league.standings">  
+            <td>{{team.team_standings.rank}}</td>
+            <td>{{team.name}}</td>            
+            <td>{{team.team_standings.points_for}}</td>
+            <td>{{team.team_standings.points_change}}</td>
+            <td>{{team.team_standings.points_back}}</td>
+        </tr>
+    </tbody>                    
+</table>  

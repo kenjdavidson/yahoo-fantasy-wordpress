@@ -1,0 +1,67 @@
+/** Common Styles */
+.text-error { color: red; }
+.text-success { color: green; }
+
+/** Image Styles */
+.yahoo-fantasy-plugin img { width: 100%; height: auto; max-width: fit-content; border-radius: 10px; }
+.yahoo-fantasy-plugin div.image-size-large { width:56px; }
+.yahoo-fantasy-plugin div.image-size-medium { width: 48px; }
+.yahoo-fantasy-plugin div.image-size-small { width: 24px; }
+
+/** Table Styles */
+.yahoo-fantasy-plugin table { width: 100%; }
+.yahoo-fantasy-plugin table thead td { font-weight: bold; border-bottom: 1px solid black; }
+
+/** Administration Keys */
+.yahoo-fantasy-plugin { display: block; width: 95%; }
+.yahoo-fantasy-plugin label { font-weight: bold; }
+.yahoo-fantasy-plugin input[type="text"],
+.yahoo-fantasy-plugin textarea,
+.yahoo-fantasy-plugin select { display: block; width: 100%; }
+.yahoo-fantasy-plugin .subscript {display: block; font-style: italic; }
+
+/** Global Styles */
+.yahoo-league,
+.yahoo-team,
+div[yf-accordion],
+div[yf-accordion-content] {
+    clear: both;
+}
+
+/** Yahoo Standing Styles **/
+.yahoo-standings div[yf-accordion-item] div[yf-accordion-title]:before { display: inline-block; content: "+"; width: 16px; text-align: left }
+.yahoo-standings div[yf-accordion-item].openned div[yf-accordion-title]:before { content: "-"; }
+.yahoo-standings div[yf-accordion-item] div[yf-accordion-content] { padding-bottom: 16px; overflow: hidden; -webkit-transition: max-height 0.5s ease-in-out; -moz-transition: max-height 0.5s ease-in-out; -o-transition: max-height 0.5s ease-in-out; transition: max-height 0.5s ease-in-out; }
+
+/** Yahoo Scoreboard Styles **/
+.yahoo-scoreboard { clear: both; margin-bottom: 16px; border-top: 1px solid #ccc; display: flow-root; }
+.yahoo-scoreboard.league-finished { background: rgba(0,0,0,0.1); }
+.yahoo-scoreboard .matchup-title { text-align: center; padding: 4px; text-transform: uppercase; }
+.yahoo-scoreboard .team-matchups yf-team-details { float: left; display: inline-block; width: 50%; }
+.yahoo-scoreboard .team-matchups yf-team-details.roto { float: none; margin: 0px auto; display: block; width: fit-content; }
+
+/** Yahoo Teams Styles */
+yf-team-details .team-points { float: left; display:inline-block; width: 75px; padding: 8px; }
+
+yf-team-details .team-points span { display: block; }
+yf-team-details .team-points .current-points { font-size: 1em; font-weight: bold; }
+yf-team-details .team-points .projected-points { font-size: 1em; }
+yf-team-details .team-image { float:left; display: inline-block; padding: 8px; }
+yf-team-details .team-details { display: inline-block; padding: 8px; }
+yf-team-details .team-name { font-size: 1em; font-weight: bold; line-height: 1em; }
+yf-team-details .team-standings span { display: block; }
+yf-team-details .team-standings span.place { font-size: 1em; text-transform: uppercase; }
+yf-team-details .team-standings span.record { font-size: 1em; }
+
+yf-team-details.home-team .team-points { float: right; display:inline-block; text-align: right; }
+yf-team-details.home-team .team-image { float: right; display:inline-block; }
+yf-team-details.home-team .team-details { float: right; display:inline-block; text-align:right; }
+
+/** Player Styles */
+.yf-player-card { margin: 16px; }
+.yf-player-card .player-image { display: inline-block; }
+.yf-player-card .player-info { display: inline-block; }
+.yf-player-card .player-info span { font-size: 1em; }
+.yf-player-card .player-name { font-weight: bold; font-size: 1em; }
+.yf-player-card .player-number { font-weight: bold; font-size: 1em; }
+div[yf-accordion-content].team-roster { height: 50vh; overflow: scroll;}

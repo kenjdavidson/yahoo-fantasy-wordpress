@@ -1,0 +1,21 @@
+<div class="row profile">
+    <div class="col-sm-12 col-md-4">
+        <p>
+            <img class="profile-image" ng-src="{{user.image.imageUrl}}" width="{{user.image.width}}" height="{{user.image.height}}"/>
+        </p>
+    </div>
+    <div class="col-sm-12 col-md-8">
+        <p>
+            <strong>Nickname: </strong><label>{{user.nickname}}</label>
+        </p>
+        <p>
+            <strong>Location: </strong><label>{{user.jurisdiction | uppercase}}</label>
+        </p>            
+        <p>
+            <strong>Language: </strong><label>{{user.lang | uppercase}}</label>
+        </p>             
+        <p>
+            <strong>Member Since: </strong><label>{{user.memberSince | uppercase}}</label>
+        </p>             
+    </div>
+</div>

@@ -1,0 +1,19 @@
+<div yf-accordion
+     class="league-standings-{{vm.userId}} yahoo-standings">
+    <div ng-repeat="league in vm.leagues"
+         yf-accordion-item
+         class="yahoo-league"
+         ng-class="{ 'league-finished': league.is_finished}"
+         initially-open="$first">
+        <div yf-accordion-title  
+            class="league-info game-{{league.game_code}}">
+            <span class="league-name">{{league.name}}</span>
+            <span class="league-seasons">{{league.season}}</span>
+            <span class="league-finished">{{league.is_finished ? "(Season Over)" : "(Week " + league.current_week + ")" }}</span>
+        </div>
+        <div yf-accordion-content
+            class="standings-info"> 
+            <ng-include ng-cloak src="vm.getStandingsTemplate(league)"></ng-include>
+        </div>
+    </div>
+</div>

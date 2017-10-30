@@ -18,7 +18,7 @@ define([
             return $api.post('yf_request_auth', {authCode: code})
                     .then(function(resp){
                         console.log('YahooUserAccountFactory.authorizeUser response: ' + resp);
-                        var data = response.data;
+                        var data = resp.data;
                         if (data.success) {
                             // Dont do anything currently
                         } 

@@ -83,20 +83,20 @@ class YahooFantasyRestHandler {
         try {            
             $this->checkSecurity(YahooFantasyRestHandler::ACTION_SECURITY[$action]); 
             
-            /* @var $provider YahooFantasyProvider */
-            $provider = $this->plugin->getYahooProvider();  
-
-            /* @var $service YahooFantasyService */
-            $userId = get_current_user_id();
-            $service = $this->plugin->getYahooService($provider, $userId); 
-            
-            if (!$service) {
-                wp_send_json_error(array(
-                    'errorType'     => 'Exception',
-                    'errorCode'     => $provider->getAuthorizationUrl(),
-                    'errorMessage'  => 901
-                ));                             
-            }
+//            /* @var $provider YahooFantasyProvider */
+//            $provider = $this->plugin->getYahooProvider();  
+//
+//            /* @var $service YahooFantasyService */
+//            $userId = get_current_user_id();
+//            $service = $this->plugin->getYahooService($provider, $userId); 
+//            
+//            if (!$service) {
+//                wp_send_json_error(array(
+//                    'errorType'     => 'Exception',
+//                    'errorCode'     => $provider->getAuthorizationUrl(),
+//                    'errorMessage'  => 901
+//                ));                             
+//            }
             
             $callable = YahooFantasyRestHandler::callableFromAction($action);
             $response = call_user_func(array($this, $callable));  

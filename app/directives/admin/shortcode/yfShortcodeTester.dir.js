@@ -57,13 +57,15 @@ define([
                 vm.shortcode = $wp.buildShortcode(newSelected.value, {
                     'wrap': 'div',
                     'wrap-class': '',
-                    'seasons': vm.seasons,
-                    'user-id': $wp.getCurrentUserId()
+                    'seasons': vm.seasons
                 });
                 
-                var shortcode = '<' + vm.shortcode.substring(1, vm.shortcode.length-1) + '>';
+                var shortcode = '<yf-' + newSelected.value + '>';
                 var $shortcode = $(shortcode)
-                    .html('<h2>' + newSelected.label + '</h2>');                                             
+                        .attr({
+                            'seasons': vm.seasons,
+                            'user-id': $wp.getCurrentUserId()
+                        }).html('<h2>' + newSelected.label + '</h2>');                                                            
                 
                 dirScope = $scope.$new(false, $scope);
                 $c($shortcode)(dirScope, function($ce, $s){

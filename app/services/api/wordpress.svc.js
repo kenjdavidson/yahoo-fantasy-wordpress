@@ -115,7 +115,7 @@ define([
          * @returns {undefined}
          */
         function buildShortcode(type, params) {           
-            var sc = '[yf-' + type;                                    
+            var sc = '[yahoofantasysports type="' + type + '"';
             
             angular.forEach(params, function(val,key){
                 sc += ' ' + key + '="' + val + '"'

@@ -59,11 +59,11 @@ define([
             
             vm.getCurrentWeek = function(league){
                 if (league.scoring_type === 'roto') {
-                    return '(' + league.start_date + '-' + league.end_date + ')';
+                    return '(' + league.scoring_type + ')';
                 } else if (league.is_finished) {                    
                     for (var i = 0; i < league.standings.length; i++) {
-                        if (league.standings[i].league_key === league.league_key) {
-                            return '(Finished ' + $filter('ordinalize')(league.standings[i].team_standings.rank) + ')';
+                        if (league.standings[i].is_owned_by_current_login === "1") {
+                            return '(Finished ' + $filter('ordinalize')(league.standings[i].team_standings.rank) + ' overall)';
                         }
                     }
                 } 

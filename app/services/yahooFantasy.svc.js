@@ -43,7 +43,19 @@ define([
         
         fantasy.getTeams = function(params) {
             return doGet('yf_get_user_teams', 'teams', params);
-        }
+        };
+        
+        fantasy.getGameKey = function(key) {
+            // league and team keys ###.l.###.t.####
+            var end = key.search(/\.l/) >= 0 ? key.search(/\.l/) : key.length; 
+            return key.substring(0,end-1);
+        };
+        
+        fantasy.getLeagueKey = function(key) {
+            // league and team keys ###.l.###.t.####
+            var end = key.search(/\.t/) >= 0 ? key.search(/\.t/) : key.length; 
+            return key.substring(0,end-1);            
+        };       
         
         return fantasy;
     }

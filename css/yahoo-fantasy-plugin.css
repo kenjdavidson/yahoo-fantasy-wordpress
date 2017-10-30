@@ -35,31 +35,33 @@ div[yf-accordion-content] {
 
 /** Yahoo Scoreboard Styles **/
 .yahoo-scoreboard { clear: both; margin-bottom: 16px; border-top: 1px solid #ccc; display: flow-root; }
-.yahoo-scoreboard.league-finished { background: rgba(0,0,0,0.2); }
+.yahoo-scoreboard.league-finished { background: rgba(0,0,0,0.1); }
 .yahoo-scoreboard .matchup-title { text-align: center; padding: 4px; text-transform: uppercase; }
 .yahoo-scoreboard .team-matchups yf-team-details { float: left; display: inline-block; width: 50%; }
-.yahoo-scoreboard .team-matchups yf-team-details.roto { float: none; margin: 0px auto; display: block; width: initial; }
-
+.yahoo-scoreboard .team-matchups yf-team-details.roto { float: none; margin: 0px auto; display: block; width: fit-content; }
 
 /** Yahoo Teams Styles */
-yf-team-details .team-points { float: left; margin-right: 16px; width: 75px; margin-top: 16px; }
-yf-team-details.home-team .team-points { float: right; text-align: right; }
+yf-team-details .team-points { float: left; display:inline-block; width: 75px; padding: 8px; }
+
 yf-team-details .team-points span { display: block; }
-yf-team-details .team-points .current-points { font-size: 1.3em; font-weight: bold; }
-yf-team-details .team-points .projected-points { font-size: 1.0em; }
-yf-team-details .team-image { float:left; margin-right: 16px; }
-yf-team-details.home-team .team-image { float: right; }
-yf-team-details.home-team .team-details { float: right; text-align:right; margin-right: 16px; }
-yf-team-details .team-name { font-size: 1.3em; font-weight: bold; line-height: 1.5em; }
+yf-team-details .team-points .current-points { font-size: 1em; font-weight: bold; }
+yf-team-details .team-points .projected-points { font-size: 1em; }
+yf-team-details .team-image { float:left; display: inline-block; padding: 8px; }
+yf-team-details .team-details { display: inline-block; padding: 8px; }
+yf-team-details .team-name { font-size: 1em; font-weight: bold; line-height: 1em; }
 yf-team-details .team-standings span { display: block; }
-yf-team-details .team-standings span.place { font-size: 1.1em; text-transform: uppercase; }
-yf-team-details .team-standings span.record { font-size: 1.1em; }
+yf-team-details .team-standings span.place { font-size: 1em; text-transform: uppercase; }
+yf-team-details .team-standings span.record { font-size: 1em; }
+
+yf-team-details.home-team .team-points { float: right; display:inline-block; text-align: right; }
+yf-team-details.home-team .team-image { float: right; display:inline-block; }
+yf-team-details.home-team .team-details { float: right; display:inline-block; text-align:right; }
 
 /** Player Styles */
 .yf-player-card { margin: 16px; }
 .yf-player-card .player-image { display: inline-block; }
 .yf-player-card .player-info { display: inline-block; }
-.yf-player-card .player-info span { font-size: 1.2em; }
-.yf-player-card .player-name { font-weight: bold; font-size: 1.2em; }
-.yf-player-card .player-number { font-weight: bold; font-size: 1.2em; }
+.yf-player-card .player-info span { font-size: 1em; }
+.yf-player-card .player-name { font-weight: bold; font-size: 1em; }
+.yf-player-card .player-number { font-weight: bold; font-size: 1em; }
 div[yf-accordion-content].team-roster { height: 50vh; overflow: scroll;}

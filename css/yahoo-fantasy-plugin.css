@@ -13,7 +13,7 @@
 .yahoo-fantasy-plugin table thead td { font-weight: bold; border-bottom: 1px solid black; }
 
 /** Administration Keys */
-.yahoo-fantasy-plugin { display: block; width: 95%; }
+.yahoo-fantasy-plugin { display: block; }
 .yahoo-fantasy-plugin label { font-weight: bold; }
 .yahoo-fantasy-plugin input[type="text"],
 .yahoo-fantasy-plugin textarea,

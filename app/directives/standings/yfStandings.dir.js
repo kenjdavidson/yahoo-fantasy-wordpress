@@ -44,7 +44,7 @@ define([
             
             vm.refresh = function(){
                 $yf.getLeagues({
-                    userId: vm.userid,
+                    userId: vm.userId,
                     seasons: vm.seasons,
                     leagueKey: vm.leagueKey
                 }).then(function(){

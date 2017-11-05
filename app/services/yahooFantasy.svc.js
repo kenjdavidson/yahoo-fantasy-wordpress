@@ -26,6 +26,7 @@ define([
                         if (data.success) {
                             fantasy[type] = data.data[type];
                         } else {
+                            console.log(resp.data.errorMessage);
                             fantasy[type] = {};
                         }
                         

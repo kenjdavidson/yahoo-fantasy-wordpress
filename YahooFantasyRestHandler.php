@@ -122,9 +122,9 @@ class YahooFantasyRestHandler {
     public function handleAjaxNopriv() {
         $action = filter_input(INPUT_GET, 'action');
         $userId = filter_input(INPUT_GET, 'userId');
-        $params = $this->filterParams();
+        $params = $this->filterParams();                
         
-        if (is_admin()) {
+        if (!$userId && is_admin()) {
             $userId = get_current_user_id();
         }                
         

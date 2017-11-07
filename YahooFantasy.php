@@ -222,7 +222,9 @@ class YahooFantasy {
         
         error_log("Creating Yahoo Fantasy Service with Access Token: " . print_r($token, true));
         $service = new YahooFantasyService($provider, $token, function($refreshed){
-                $this->saveYahooOption('yf_access_token', json_encode($refreshed), true);
+                if (is_admin()) {
+                    $this->saveYahooOption('yf_access_token', json_encode($refreshed), true);    
+                }                
             });
             
         return $service;

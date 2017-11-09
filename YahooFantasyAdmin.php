@@ -55,7 +55,8 @@ class YahooFantasyAdmin {
         $code = filter_input(INPUT_GET, 'code');
 
         try {
-            error_log('Attempting to request AccessToken with code ' . $code);
+            error_log(sprintf(__("Attempting to request AccessToken with code ", "yahoo-fantasy")),
+                    $code);
 
             $provider = $this->plugin->getYahooProvider();
             $token = $provider->getAccessToken('authorization_code', [
@@ -63,7 +64,8 @@ class YahooFantasyAdmin {
             ]);
 
             $encoded = json_encode($token);
-            error_log('Retrieved AccessToken: ' . $encoded);
+            error_log(sprintf(__("Retrieved AccessToken: %s", "yahoo-fantasy")),
+                    $encoded);
             $this->plugin->saveYahooOption('yf_access_token', $encoded, true);                
         } catch (Exception $ex) {
             error_log($ex->getMessage());
@@ -114,7 +116,7 @@ class YahooFantasyAdmin {
     public function showSettingsPage() {        
         
         if (!current_user_can('publish_posts')) {
-            wp_die(__('Publish_Post user access is required in order to View this page.', 'yahoo-fantasy'));
+            wp_die(__("Publish_Post user access is required in order to View this page.", "yahoo-fantasy"));
         }
         
         echo '<div class="yahoo-fantasy-plugin">';
@@ -131,7 +133,7 @@ class YahooFantasyAdmin {
     public function showKeysPage() {        
         
         if (!current_user_can('manage_options')) {
-            wp_die(__('Manage_Options user access is required in order to View this page.', 'yahoo-fantasy'));
+            wp_die(__("Manage_Options user access is required in order to View this page.", "yahoo-fantasy"));
         }
         
         echo '<div class="yahoo-fantasy-plugin">';

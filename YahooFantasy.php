@@ -198,7 +198,8 @@ class YahooFantasy {
     public function getYahooProvider() {
         $config = $this->getConsumerKeys();
         
-        error_log('Creating YahooFantasyProvider with ' . print_r($config, true));
+        error_log(sprintf(__("Creating YahooFantasyProvider with %s", "yahoo-fantasy"),
+                print_r($config, true)));
         return new YahooFantasyProvider($config);
     }
 
@@ -211,7 +212,8 @@ class YahooFantasy {
         
         $tokenString = get_user_option('yf_access_token', $user);            
         if (!$tokenString) {
-            error_log('Invalid AccessToken, providing authorization url: ' . $provider->getAuthorizationUrl());
+            error_log(sprintf(__("Invalid AccessToken, providing authorization url: %s","yahoo-fantasy"),
+                    $provider->getAuthorizationUrl()));
             return false;
         }      
         
@@ -220,11 +222,10 @@ class YahooFantasy {
         $tokenJson = json_decode($tokenString, true); 
         $token = new AccessToken($tokenJson); 
         
-        error_log("Creating Yahoo Fantasy Service with Access Token: " . print_r($token, true));
+        error_log(sprintf(__("Creating Yahoo Fantasy Service with Access Token: %s", "yahoo-fantasy")),
+                print_r($token, true));
         $service = new YahooFantasyService($provider, $token, function($refreshed){
-                if (is_admin()) {
-                    $this->saveYahooOption('yf_access_token', json_encode($refreshed), true);    
-                }                
+                $this->saveYahooOption('yf_access_token', json_encode($refreshed), true);    
             });
             
         return $service;
@@ -238,23 +239,27 @@ class YahooFantasy {
      * @param type $user
      */
     public function saveYahooOption($name, $value, $isUser = false, $user = null) {
+        
+        $userId = ($user == null) ? get_current_user_id() : $user;
+        
         if (!$isUser) {
-            error_log("Attempting to save Wordpress option {$name} with value {$value}.");
+            error_log(sprintf(__("Attempting to save Wordpress option %s with value %s.","yahoo-fantasy"),
+                    $name, $value));            
             $saved = update_option($name, $value);
             if (!$saved && $value != get_option($name)) {
-                throw new Exception("Could not save Yahoo! Wordpress Option {$name} with value {$value}."
-                . " See Wordpress logs.");
+                throw new Exception(sprintf(__("Could not save Yahoo! Wordpress Option %s with value %s.","yahoo-fantasy"),
+                        $name, $value));
             }
-        } else {
-            $userId = ($user == null) ? get_current_user_id() : $user;
-            
+        } else if ($userId != 0) {                        
             error_log("Attempting to save user {$userId} option {$name} with value {$value}.");
             $saved = update_user_option($userId, $name, $value);
             if (!$saved && $value != get_option($name)) {
-                error_log("Error saving user {$userId} option {$name} with status {$saved}.");
-                throw new Exception("Could not save Yahoo! Wordpress User Option {$name} with value {$value}."
-                . " See Wordpress logs.");
+                throw new Exception(sprintf(__("Could not save Yahoo! Wordpress User Option %s with value %s.","yahoo-fantasy"),
+                        $name, $value));
             }            
+        } else {
+            error_log(sprintf(__("User Id was neither provided nor found.  Unable to save option %s", "yahoo-fantasy")),
+                    $userId);
         }
         return $value;
     }

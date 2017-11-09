@@ -81,29 +81,14 @@ class YahooFantasyRestHandler {
         $action = filter_input(INPUT_GET, 'action');
         
         try {            
-            $this->checkSecurity(YahooFantasyRestHandler::ACTION_SECURITY[$action]); 
-            
-//            /* @var $provider YahooFantasyProvider */
-//            $provider = $this->plugin->getYahooProvider();  
-//
-//            /* @var $service YahooFantasyService */
-//            $userId = get_current_user_id();
-//            $service = $this->plugin->getYahooService($provider, $userId); 
-//            
-//            if (!$service) {
-//                wp_send_json_error(array(
-//                    'errorType'     => 'Exception',
-//                    'errorCode'     => $provider->getAuthorizationUrl(),
-//                    'errorMessage'  => 901
-//                ));                             
-//            }
-            
+            $this->checkSecurity(YahooFantasyRestHandler::ACTION_SECURITY[$action]);             
             $callable = YahooFantasyRestHandler::callableFromAction($action);
             $response = call_user_func(array($this, $callable));  
             wp_send_json_success($response);    
 
         } catch (Exception $ex) {
-            error_log("Action {$action} threw an exception: " . $ex->getMessage());
+            error_log(sprintf(__("Action %s threw an exception: %s", "yahoo-fantasy")),
+                    $action, $ex->getMessage());
             
             wp_send_json_error(array(
                 'errorType'     => 'Exception',
@@ -130,7 +115,7 @@ class YahooFantasyRestHandler {
         
         try {                                       
             if (!$userId) {
-                throw new Exception(__('UserId is required in order to lookup Yahoo! Resources.', 'yahoo-fantasy'), 902);
+                throw new Exception(__("UserId is required in order to lookup Yahoo! Resources.", "yahoo-fantasy"), 902);
             }   
             
             $this->checkSecurity(null);               
@@ -144,17 +129,19 @@ class YahooFantasyRestHandler {
             if (!$service && $provider) {
                 throw new Exception($provider->getAuthorizationUrl(), 901);
             } else if (!$service) {
-                throw new Exception(__('Unable to access Yahoo! services for this user.', 'yahoo-fantasy'));
+                throw new Exception(__("Unable to access Yahoo! services for this user.", "yahoo-fantasy"));
             }
             
             $callable = YahooFantasyRestHandler::callableFromAction($action);
-            error_log("Action {$action} making request to {$callable}");
+            error_log(sprintf(__("Action %s making request to %s.","yahoo-fatnasy")),
+                    $action, $callable);
             $response = call_user_func_array(array($this, $callable), 
                     array($service, $userId, $params));  
             wp_send_json_success($response);             
                         
         } catch (Exception $ex) {
-            error_log("Action {$action} threw an exception: " . $ex->getMessage());
+            error_log(sprintf(__("Action %s threw an exception: %s", "yahoo-fantasy")),
+                    $action, $ex->getMessage());
             
             wp_send_json_error(array(
                 'errorType'     => 'Exception',
@@ -216,7 +203,8 @@ class YahooFantasyRestHandler {
     public function getUserGames($service, $userId, $params) {
         try {
             $games = $service->getUserGames($params['seasons']);
-            error_log("Found games for {$userId}: " . print_r($games, true));
+            error_log(sprintf(__("Found games for user %s: %s", "yahoo-fantasy")),
+                    $userId, print_r($games, true));
 
             return array(
                 'games'      => $games
@@ -236,7 +224,8 @@ class YahooFantasyRestHandler {
     public function getUserLeagues($service, $userId, $params) {
         try {
             $leagues = $service->getUserLeagues($params['seasons']);
-            error_log("Found leagues for {$userId}: " . print_r($leagues, true));
+            error_log(sprintf(__("Found leagues for user %s: %s", "yahoo-fantasy")),
+                    $userId, print_r($leagues, true));
 
             return array(
                 'leagues'      => $leagues
@@ -256,7 +245,8 @@ class YahooFantasyRestHandler {
     public function getUserTeams($service, $userId, $params) {
         try {
             $teams = $service->getUserTeams($params['seasons']);
-            error_log("Found leagues for {$userId}: " . print_r($teams, true));
+            error_log(sprintf(__("Found teams for user Id %s: ","yahoo-fantasy")),
+                    $userId, print_r($teams, true));
 
             return array(
                 'teams'      => $teams
@@ -275,7 +265,7 @@ class YahooFantasyRestHandler {
         wp_send_json_success();
         
         if (!$deleted) {
-            throw new Exception("Unable to clear users access token.". 902);
+            throw new Exception(sprintf(__("Unable to clear users access token.", "yahoo-fantasy")), 902);
         }
     }
     
@@ -296,7 +286,8 @@ class YahooFantasyRestHandler {
     public function getUserAccount($service) {
         try {                   
             $account = $service->getUSerAccount();
-            error_log("Found user account for service" . print_r($account, true));
+            error_log(sprintf(__("Found account infor for user: %s", "yahoo-fantasy")),
+                    print_r($account, true));
             
             return array(
                 'account'      => $account
@@ -367,7 +358,8 @@ class YahooFantasyRestHandler {
         try {
             $code = filter_input(INPUT_POST, 'authCode');
 
-            error_log('Attempting to request AccessToken with code ' . $code);
+            error_log(sprintf(__("Attempting to request Access Token with code: %s")),
+                    $code);
 
             $provider = $this->plugin->getYahooProvider();
             $token = $provider->getAccessToken('authorization_code', [

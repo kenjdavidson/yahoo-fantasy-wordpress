@@ -11,7 +11,8 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="team in league.standings">  
+        <tr ng-repeat="team in league.standings track by $index" 
+            ng-class="{ 'users-team': team.is_owned_by_current_login=='1', 'first-place': $index==0, 'second-place': $index==1, 'third-place': $index==2 }">  
             <td class="standings-rank">{{team.team_standings.rank}}</td>
             <td class="standings-team-name">{{team.name}}</td>
             <td class="standings-record">{{vm.getOutcomeTotals(team.team_standings.outcome_totals)}}</td>

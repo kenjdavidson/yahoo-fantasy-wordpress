@@ -1,20 +1,21 @@
 <table class="roto-standings">
     <thead>
         <tr>  
-            <td>Rank</td>
-            <td>Team Name</td>
-            <td>Pts For</td>
-            <td>Pts Change</td>
-            <td>Pts Back</td>
+            <td class="standings-rank">Rank</td>
+            <td class="standings-team-name">Team Name</td>
+            <td class="standings-pts-for">Points</td>
+            <td class="standings-pts-change">Change</td>
+            <td class="standings-pts-back">Back</td>              
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="team in league.standings">  
-            <td>{{team.team_standings.rank}}</td>
-            <td>{{team.name}}</td>            
-            <td>{{team.team_standings.points_for}}</td>
-            <td>{{team.team_standings.points_change}}</td>
-            <td>{{team.team_standings.points_back}}</td>
+        <tr ng-repeat="team in league.standings track by $index" 
+            ng-class="{ 'users-team': team.is_owned_by_current_login=='1', 'first-place': $index==0, 'second-place': $index==1, 'third-place': $index==2 }">  
+            <td class="standings-rank">{{team.team_standings.rank}}</td>
+            <td class="standings-team-name">{{team.name}}</td>            
+            <td class="standings-pts-for">{{team.team_standings.points_for}}</td>
+            <td class="standings-pts-against">{{team.team_standings.points_change}}</td>
+            <td class="standings-streak">{{team.team_standings.points_back}}</td>            
         </tr>
     </tbody>                    
 </table>  

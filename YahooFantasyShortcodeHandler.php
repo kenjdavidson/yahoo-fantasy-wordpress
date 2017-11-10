@@ -61,7 +61,7 @@ class YahooFantasyShortcodeHandler {
        
         // Override default attributes with user attributes
         $options = shortcode_atts([
-                'wrap'        => 'div',
+                'wrap'        => 'p',
                 'wrap-class' => '',            
                 'seasons'     => getDate()['year'],
                 'class'     => 'yahoo-fantasy-shortcode'                            

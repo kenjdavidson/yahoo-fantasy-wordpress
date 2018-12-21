@@ -21,7 +21,7 @@ requirejs.config({
         jquery: 'https://code.jquery.com/jquery-3.2.1.min',
         angular: 'https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min',        
         ngResource: 'https://ajax.googleapis.com/ajax/libs/angularjs/X.Y.Z/angular-resource',
-        toastr: 'http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min',
+        toastr: 'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min',
         controllers: 'controllers',
         directives: 'directives',
         services: 'services',

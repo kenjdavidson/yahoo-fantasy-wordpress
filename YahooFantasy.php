@@ -155,7 +155,7 @@ class YahooFantasy {
                 '1.0.0');
         
         wp_enqueue_style('toastr',
-                'http://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
+                'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css');
         
         $ngConfig = [
             'nonce'         => wp_create_nonce(YahooFantasy::NONCE_ACTION),
